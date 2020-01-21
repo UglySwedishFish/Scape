@@ -28,4 +28,8 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Very realistic ocean rendering with physically accurate water volume** 
 * **TAA** 
 
-* **
+# More media:
+
+![image](https://github.com/UglySwedishFish/Scape/blob/master/Scape/Media/Comparasion.png?raw=true)
+
+**No lighting vs baked lighting**
