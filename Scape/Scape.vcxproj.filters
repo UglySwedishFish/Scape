@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a4e77243-c4c0-45cf-9c09-0c13589240ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Generator">
+      <UniqueIdentifier>{4a52f212-fdbb-458e-ad03-a4d319757def}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Glad">
+      <UniqueIdentifier>{1d38f5c7-a1c5-4433-8977-710bec96316f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Copy">
+      <UniqueIdentifier>{6ee98754-60d2-4cc8-894e-006973b2019b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\EntityDeferred">
+      <UniqueIdentifier>{0cc7e2e3-4990-4034-93dc-f1f4553120a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\HitHandler">
+      <UniqueIdentifier>{920c359f-9d08-450e-9f0a-aa0052776007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\RayGenerator">
+      <UniqueIdentifier>{015712db-0e07-4280-88ac-d608bee36487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SkyCubeShader">
+      <UniqueIdentifier>{d59c2715-a663-446e-a385-0768e87f8c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SkyIncidentShader">
+      <UniqueIdentifier>{0f400847-8c76-42cf-8b86-0d8db88b90e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Direct">
+      <UniqueIdentifier>{61173ad1-5e6c-4c4b-9c89-be638d6fa35a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="include\GL\glad.c">
+      <Filter>Glad</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHTranslator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BVH.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Chunks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersecter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBakerManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kernel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shaders\Generator\NoiseGenerator.h">
+      <Filter>Shaders\Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BVHTranslator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DependenciesMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBakerManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersecter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Kernel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AtmosphereRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectLightingHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Generator\shader.frag">
+      <Filter>Shaders\Generator</Filter>
+    </None>
+    <None Include="Shaders\Generator\shader.vert">
+      <Filter>Shaders\Generator</Filter>
+    </None>
+    <None Include="Shaders\Copy\shader.frag">
+      <Filter>Shaders\Copy</Filter>
+    </None>
+    <None Include="Shaders\Copy\shader.vert">
+      <Filter>Shaders\Copy</Filter>
+    </None>
+    <None Include="Shaders\EntityDeferred\shader.frag">
+      <Filter>Shaders\EntityDeferred</Filter>
+    </None>
+    <None Include="Shaders\EntityDeferred\shader.vert">
+      <Filter>Shaders\EntityDeferred</Filter>
+    </None>
+    <None Include="Shaders\HitHandler\shader.frag">
+      <Filter>Shaders\HitHandler</Filter>
+    </None>
+    <None Include="Shaders\HitHandler\shader.vert">
+      <Filter>Shaders\HitHandler</Filter>
+    </None>
+    <None Include="Shaders\RayGenerator\shader.vert">
+      <Filter>Shaders\RayGenerator</Filter>
+    </None>
+    <None Include="Shaders\RayGenerator\shader.frag">
+      <Filter>Shaders\RayGenerator</Filter>
+    </None>
+    <None Include="Shaders\SkyCubeShader\shader.frag">
+      <Filter>Shaders\SkyCubeShader</Filter>
+    </None>
+    <None Include="Shaders\SkyCubeShader\shader.vert">
+      <Filter>Shaders\SkyCubeShader</Filter>
+    </None>
+    <None Include="Shaders\SkyIncidentShader\shader.vert">
+      <Filter>Shaders\SkyIncidentShader</Filter>
+    </None>
+    <None Include="Shaders\SkyIncidentShader\shader.frag">
+      <Filter>Shaders\SkyIncidentShader</Filter>
+    </None>
+    <None Include="Shaders\Direct\shader.frag">
+      <Filter>Shaders\Direct</Filter>
+    </None>
+    <None Include="Shaders\Direct\shader.vert">
+      <Filter>Shaders\Direct</Filter>
+    </None>
+    <None Include="..\..\UglySwedishFish\SCP-354\SCP-354\Shaders\EntityDeferred\shaderSimple.frag">
+      <Filter>Shaders\EntityDeferred</Filter>
+    </None>
+  </ItemGroup>
+</Project>
