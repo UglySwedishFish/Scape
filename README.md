@@ -22,9 +22,9 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Volumetric height fog** 
 * **Support for screen-space GI + AO for more dynamic objects as well as camera-centric cubemap solution for indirect specular lighting**
 * **Support for baked radiance probes for chunks for indirect specular lighting fallback as well as indirect diffuse fallback for more dynamic objects**
-* **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)
+* **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)**
 * **Basic skeletal animation support** 
-* **Basic networking support. Let people explore together! 
+* **Basic networking support. Let people explore together!**
 * **Look into potential of using lightfields for microgeometry such as grass** 
 * **Decal support for smaller geometry such as branches or leaves that have falled on the ground** 
 * **Add support for multiple biomes** 
@@ -33,7 +33,7 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Area, IES, Point and Spot light sources** 
 * **Very realistic ocean rendering with physically accurate water volume** 
 * **TAA** 
-* **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat! 
+* **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat!**
 
 # More media:
 
