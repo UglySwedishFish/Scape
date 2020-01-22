@@ -23,7 +23,7 @@ namespace Scape {
 			FrameBufferObject ShadowMaps[5]; 
 			Matrix4f ViewMatrices[5], ProjectionMatrices[5]; 
 
-			Shader SkyIncidentShader, SkyCubeShader; 
+			Shader SkyIncidentShader, SkyCubeShader, ShadowDeferred; 
 
 			void PrepareSkyRenderer(Window & Window); 
 			void RenderSky(Window& Window, Camera & Camera, WorldManager & World); 
@@ -41,7 +41,7 @@ namespace Scape {
 
 		private: 
 
-			void UpdateShadowMap(Window & Window, WorldManager& World);
+			void UpdateShadowMap(Window & Window, Camera& Camera, WorldManager& World);
 
 
 		};

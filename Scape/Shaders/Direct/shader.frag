@@ -4,22 +4,16 @@
 in vec2 TexCoord; 
 layout(location = 0) out vec3 Lighting;
 
-uniform sampler2D ShadowMaps[3]; 
-uniform mat4 ShadowMatrices[3]; 
+uniform sampler2D ShadowMaps[5]; 
+uniform mat4 ShadowMatrices[5]; 
 
 uniform sampler2D WorldPosition; 
 uniform sampler2D Normal; 
 uniform sampler2D Albedo; 
-uniform sampler2D LocalLighting; 
-uniform sampler2D HeightMap; 
-uniform samplerCube Sky; 
-uniform sampler2DArray HemisphericalShadowMap; 
-uniform sampler2DArray WaterTexture; 
-uniform mat4 HemisphericalMatrix[24]; 
-uniform vec3 HemiCameraPosition[24]; 
+uniform sampler2D LightMap; 
 
-uniform vec3 CameraPosition; 
-uniform vec3 FullCameraPosition; 
+uniform vec3 SunColor; 
+
 uniform vec3 LightDirection; 
 uniform int Frame; 
 uniform float Time; 
@@ -69,59 +63,7 @@ vec4 SampleInterpolatied(sampler2DArray Sampler,vec3 Coord) {
 
 }
 
-float ComputeCausticFactor(vec3 WorldPos) {
-	
-	//ray-intersection with an infinite plane 
-
-	//ROy + RDy * x = 40.0 
-	//RDy * x = 40.0 - ROy
-	//x = (40.0 - ROy) / RDy
-
-	//"technically" approximating the water surface as a solid plane is not correct but... well, meh
-
-	if(WorldPos.y >= WaterHeight || LightDirection.y <= 0.0) 
-		return 1.0; 
-
-	vec3 WaterCoordinate = WorldPos + LightDirection * ((40.0 - WorldPos.y) / LightDirection.y); 
-
-	vec4 Sample = SampleInterpolatied(WaterTexture, vec3(WaterCoordinate.xz * 0.05, mod(Time*10.0, 119.))); 
-
-	Sample.xyz = normalize(Sample.xyz); 
-
-	return pow(max(dot(refract(vec3(0.0,-1.0,0.0), Sample.xyz, 1.0/1.33), vec3(0.0,-1.0,0.0)),0.0),48.0); 
-
-}
-
-vec3 ComputeWaterLightLossFactor(vec3 Lighting, vec3 Direction, vec3 Origin, float Traversal) {
-
-	float ActualTraversal = Traversal; 
-
-	if(Origin.y > WaterHeight && Direction.y >= 0.0) {
-		return Lighting; 
-	}
-	else if(Origin.y > WaterHeight && Direction.y < 0.0) {
-		float ToWaterTraversal = (40.0-Origin.y) / Direction.y; 
-		if(ToWaterTraversal < Traversal) {
-			ActualTraversal = ActualTraversal - ToWaterTraversal; 
-		}
-	}
-	else if(Direction.y > 0.0) {
-		float ToWaterTraversal = (40.0-Origin.y) / Direction.y; 
-		ActualTraversal = min(ToWaterTraversal, ActualTraversal); 
-	}
-
-	vec3 Absorption = vec3(0.8,0.08,0.01) + vec3(0.01, 0.025, 0.05) * 2.0; 
-
-	vec3 Transmission = vec3(exp(-Absorption.x * ActualTraversal),exp(-Absorption.y * ActualTraversal),exp(-Absorption.z * ActualTraversal)); 
-
-	return mix(vec3(0.0), Lighting, Transmission); 
-	
-} 
-
 float MultiShadowPass(vec3 WorldPos, float Offset, out int Pass) {
-
-
-	float Caustic = ComputeCausticFactor(WorldPos); 
 
 
 	float HashOffset = 0.9 + 0.1 * hash2().x; 
@@ -147,7 +89,7 @@ float MultiShadowPass(vec3 WorldPos, float Offset, out int Pass) {
 				vec2 Direction = vec2(cos(Angle), sin(Angle)); 
 				float Length = Hash.y * Multipliers[Pass];
 
-				TotalShadow += Caustic * (texture(ShadowMaps[Pass],ShadowScreenCoord.xy + Direction * Length / SHADOW_MAP_RES).x > ShadowScreenCoord.z-0.000003*(1+Length + OffsetMultiplier[Pass]) ? 1.0 : 0.0);
+				TotalShadow += (texture(ShadowMaps[Pass],ShadowScreenCoord.xy + Direction * Length / SHADOW_MAP_RES).x > ShadowScreenCoord.z-0.000003*(1+Length + OffsetMultiplier[Pass]) ? 1.0 : 0.0);
 
 			}
 			return TotalShadow / float(SHADOW_TAPS); 
@@ -173,16 +115,9 @@ void main() {
 
 	vec3 WorldPos = texture(WorldPosition, TexCoord).xyz; 
 	vec4 NormalSample = texture(Normal, TexCoord);
-	
-	vec3 Incident = normalize(CameraPosition - WorldPos); 
 
-	int Pass = 0; 
-
-	WaterHeight = 37.9 + 2.1 * SampleInterpolatied(WaterTexture,vec3(WorldPos.xz * 0.05, mod(Time*10.0, 119.))).w; 
-
-
-
-	float ShadowSample = MultiShadowPass(WorldPos, 0.0003, Pass);  
-	Lighting = ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * 3.0 * texture(Sky, LightDirection).xyz;
-	Lighting = ComputeWaterLightLossFactor(Lighting, LightDirection, WorldPos, 10000.); 
+	int Pass = 0;
+	float ShadowSample = MultiShadowPass(WorldPos, 0.003, Pass);  
+	Lighting = (texture(Albedo, TexCoord).xyz) * (ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
+	Lighting = pow(Lighting, vec3(0.45454545)); 
 }

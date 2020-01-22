@@ -19,21 +19,35 @@ namespace Scape {
 
 			SkyIncidentShader = Shader("Shaders/SkyIncidentShader");
 			SkyCubeShader = Shader("Shaders/SkyCubeShader");
+			ShadowDeferred = Shader("Shaders/EntityDeferred/shader.vert", std::string("Shaders/EntityDeferred/shader.frag")); 
+
+			ShadowDeferred.Bind(); 
+
+			ShadowDeferred.SetUniform("InstanceData", 0);
+			ShadowDeferred.SetUniform("AlbedoMap", 2);
+			ShadowDeferred.SetUniform("NormalMap", 3);
+			ShadowDeferred.SetUniform("RoughnessMap", 4);
+			ShadowDeferred.SetUniform("MetalnessMap", 5);
+			ShadowDeferred.SetUniform("EmissiveMap", 6);
+			ShadowDeferred.SetUniform("LightMap", 7);
+			ShadowDeferred.SetUniform("Sky", 8);
+
+			ShadowDeferred.UnBind(); 
 
 			for (int i = 0; i < 5; i++) {
-				ShadowMaps[i] = FrameBufferObject(Vector2i(SHADOWMAP_RES), GL_R8);
+				ShadowMaps[i] = FrameBufferObject(Vector2i(SHADOWMAP_RES), GL_RGB16F);
 				ProjectionMatrices[i] = Core::ShadowOrthoMatrix(Ranges[i], 100.f, 2500.f);
 			}
-
-
-			
-
 
 
 		}
 
 		void SkyRendering::RenderSky(Window& Window, Camera& Camera, WorldManager& World)
 		{
+
+			glEnable(GL_DEPTH_TEST); 
+
+			UpdateShadowMap(Window, Camera, World);
 
 			glDisable(GL_DEPTH_TEST); 
 
@@ -76,7 +90,6 @@ namespace Scape {
 
 			SkyIncidentShader.UnBind();
 
-			UpdateShadowMap(Window, World); 
 
 
 		}
@@ -98,33 +111,29 @@ namespace Scape {
 			SunColor = Atmospheric::GetSunColor(Orientation); 
 
 		}
-		void SkyRendering::UpdateShadowMap(Window& Window, WorldManager& World)
+		void SkyRendering::UpdateShadowMap(Window& Window, Camera& Camera, WorldManager& World)
 		{
+
+			Scape::Camera ShadowCamera; 
 
 			int ToUpdate = UpdateQueue[Window.GetFrameCount() % 26];
 
+			ViewMatrices[ToUpdate] = Core::ViewMatrix(Camera.Position + Orientation * 500.0f, Vector3f(Direction.x, Direction.y, 0.));
+
+			ShadowCamera.Project = ProjectionMatrices[ToUpdate]; 
+			ShadowCamera.View = ViewMatrices[ToUpdate]; 
+			
 
 
-
-
+			ShadowDeferred.Bind(); 
 
 			ShadowMaps[ToUpdate].Bind(); 
 
-
+			World.RenderWorld(Window, ShadowCamera, SkyCube, &ShadowDeferred);
 
 			ShadowMaps[ToUpdate].UnBind(Window); 
 
-
-
-
-
-
-
-
-
-
-
-
+			ShadowDeferred.UnBind(); 
 
 		}
 	}

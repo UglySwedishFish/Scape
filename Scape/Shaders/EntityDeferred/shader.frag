@@ -3,7 +3,7 @@
 layout(location = 0) out vec4 OutAlbedo; 
 layout(location = 1) out vec4 OutNormal; 
 layout(location = 2) out vec4 WorldPosition; 
-layout(location = 3) out float Emission; 
+layout(location = 3) out vec3 Lighting; 
 
 
 in vec2 TexCoord;
@@ -70,14 +70,10 @@ void main() {
 	
 
 	WorldPosition = vec4(Position, OutAlbedo.w);
-	Emission = InputEmission; 
 	//OutAlbedo.xyz = OutNormal.xyz; 
 
 	vec3 LightMap = texture(LightMap, LightMapTC).xyz; 
 
-	OutAlbedo.xyz *= LightMap.xxx * LightMap.y; 
-	OutAlbedo.xyz *= textureLod(Sky, OutNormal.xyz,4.0).xyz; 
-	OutAlbedo.xyz = pow(OutAlbedo.xyz, vec3(0.45454545)); 
-
+	Lighting = LightMap.xxx * LightMap.y * textureLod(Sky, OutNormal.xyz,4.0).xyz; 
 
 }

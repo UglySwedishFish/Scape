@@ -138,6 +138,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunks.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Direct.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="include\GL\glad.c" />
@@ -162,7 +163,7 @@
     <ClInclude Include="Chunks.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="DependenciesMath.h" />
-    <ClInclude Include="DirectLightingHandler.h" />
+    <ClInclude Include="Direct.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Generator.h" />

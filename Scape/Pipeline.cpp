@@ -13,6 +13,7 @@ namespace Scape {
 		PreparePostProcess();
 		World.PrepareWorldManager(Window);
 		Sky.PrepareSkyRenderer(Window); 
+		Direct.PrepareDirectLighting(Window); 
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
@@ -87,8 +88,10 @@ namespace Scape {
 
 			glEnable(GL_DEPTH_TEST); 
 
-			glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+			World.DeferredFBO.Bind(); 
 			World.RenderWorld(Window, Camera, Sky.SkyCube); 
+			World.DeferredFBO.UnBind();
+			Direct.RenderDirectLighting(Window, Camera, World, Sky); 
 
 			glFinish();
 

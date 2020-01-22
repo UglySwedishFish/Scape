@@ -1,7 +1,6 @@
 #pragma once
 
-#include "WorldManager.h"
-#include "SkyRenderer.h"
+#include "Direct.h"
 #include "Camera.h"
 namespace Scape {
 
@@ -11,6 +10,7 @@ namespace Scape {
 
 		WorldManager World; 
 		SkyRendering Sky; 
+		DirectRenderer Direct; 
 
 
 

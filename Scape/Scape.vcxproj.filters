@@ -105,6 +105,9 @@
     <ClCompile Include="SkyRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Direct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shaders\Generator\NoiseGenerator.h">
@@ -173,7 +176,7 @@
     <ClInclude Include="AtmosphereRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DirectLightingHandler.h">
+    <ClInclude Include="Direct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,7 +9,7 @@ namespace Scape {
 		void WorldManager::PrepareWorldManager(Window& Window)
 		{
 			Importer = std::make_unique<Assimp::Importer>(); 
-			DeferredFBO = MultiPassFrameBufferObject(Window.GetResolution(), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_R16F }); 
+			DeferredFBO = MultiPassFrameBufferObject(Window.GetResolution(), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F }); 
 			EntityDeferredShader = Shader("Shaders/EntityDeferred"); 
 
 			EntityDeferredShader.Bind();
@@ -74,11 +74,20 @@ namespace Scape {
 		void WorldManager::RenderWorld(Window& Window, Camera& Camera, CubeMultiPassFrameBufferObject& SkyCube, Shader* OverideShader)
 		{
 
-			Shader* CurrentShader = (OverideShader != nullptr ? OverideShader : &EntityDeferredShader); 
+			Shader* CurrentShader = &EntityDeferredShader;
+			if (OverideShader != nullptr) {
+				CurrentShader = OverideShader; 
+				//std::cout << "Using custom shader!\n"; 
+			}
 
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-			glViewport(0, 0, Window.GetResolution().x, Window.GetResolution().y); 
+
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
+			//glViewport(0, 0, Window.GetResolution().x, Window.GetResolution().y); 
+
+
+
 
 			CurrentShader->Bind();
 			CurrentShader->SetUniform("IdentityMatrix", Camera.Project * Camera.View);
