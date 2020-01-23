@@ -19,6 +19,7 @@ uniform sampler2D MetalnessMap;
 uniform sampler2D EmissiveMap; 
 uniform sampler2D LightMap; 
 uniform samplerCube Sky; 
+uniform sampler2DArray LightMapGI; 
 
 
 uniform bool HasAlbedo; 
@@ -31,6 +32,11 @@ uniform vec3 Albedo;
 uniform float Metalness; 
 uniform float Roughness; 
 uniform float InputEmission; 
+
+uniform float TimeOfDay; 
+uniform vec3 SunColor; 
+uniform int LightingZones; 
+
 
 vec3 CalcNormalMappedNormal(float intensity,mat3 TBN)  { //for normal maps 
     return mix(Normal,(TBN * (texture(NormalMap,TexCoord).rgb * 2. -1.)),intensity);
@@ -74,6 +80,43 @@ void main() {
 
 	vec3 LightMap = texture(LightMap, LightMapTC).xyz; 
 
-	Lighting = LightMap.xxx * LightMap.y * textureLod(Sky, OutNormal.xyz,4.0).xyz; 
+	//whats our GI lookin like?= 
 
+	vec3 LightGIA, LightGIB, LightGIFinal = vec3(0.0); 
+	float LightGIMixFactor; 
+
+
+	if(TimeOfDay < 43200. && TimeOfDay > 0.0) {
+		
+		float TimeAddon = 43200 / float(LightingZones); 
+
+		if(TimeOfDay < TimeAddon) {
+			LightGIA = vec3(0.0); 
+			LightGIB = texture(LightMapGI, vec3(LightMapTC, 0.0)).xyz; 
+		}
+		else if(TimeOfDay + TimeAddon > 43200.) {
+			LightGIA = texture(LightMapGI, vec3(LightMapTC, float(LightingZones-3))).xyz; 
+			LightGIB = vec3(0.0); 
+		}
+		else {
+			int Clamped = int((TimeOfDay / 43200.f) * LightingZones);
+			
+			LightGIA = texture(LightMapGI, vec3(LightMapTC, Clamped-1)).xyz; 
+			LightGIB = texture(LightMapGI, vec3(LightMapTC, Clamped)).xyz; 
+
+		}
+
+		LightGIMixFactor = fract(TimeOfDay / TimeAddon); 
+
+		LightGIFinal = mix(LightGIA, LightGIB, LightGIMixFactor); 
+
+	}
+	
+
+
+
+	Lighting = LightMap.x * textureLod(Sky, OutNormal.xyz,4.0).xyz; 
+	Lighting += LightGIFinal * SunColor; 
+	Lighting *= LightMap.y; 
+	//Lighting = texture(LightMapGI, vec3(LightMapTC, 4.0)).xyz; 
 }

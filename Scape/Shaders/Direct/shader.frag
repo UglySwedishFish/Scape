@@ -17,6 +17,7 @@ uniform vec3 SunColor;
 uniform vec3 LightDirection; 
 uniform int Frame; 
 uniform float Time; 
+uniform bool UseAlbedo; 
 
 
 sampler2D GetShadowCascade(int Index) {
@@ -118,6 +119,13 @@ void main() {
 
 	int Pass = 0;
 	float ShadowSample = MultiShadowPass(WorldPos, 0.003, Pass);  
-	Lighting = (texture(Albedo, TexCoord).xyz) * (ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
+
+	vec3 Alb = UseAlbedo ? (texture(Albedo, TexCoord).xyz) : vec3(1.0); 
+
+	Lighting = Alb * (ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
+	//Lighting = texture(LightMap, TexCoord).xyz; 
 	Lighting = pow(Lighting, vec3(0.45454545)); 
+
+	//Lighting = pow(texture(ShadowMaps[0],TexCoord).xxx,vec3(1000.)); 
+
 }

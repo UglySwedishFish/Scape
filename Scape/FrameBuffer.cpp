@@ -113,6 +113,16 @@ void Scape::Rendering::FrameBufferObject::UnBind(Window Window) {
 	glViewport(0, 0, Window.GetResolution().x, Window.GetResolution().y);
 }
 
+void Scape::Rendering::FrameBufferObject::UnBind()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, NULL);
+	if (GenerateMip) {
+		glBindTexture(GL_TEXTURE_2D, ColorBuffer);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, NULL);
+	}
+}
+
 Scape::Rendering::MultiPassFrameBufferObject::MultiPassFrameBufferObject(glm::ivec2 Resolution, int stages, std::vector<int> Formats, bool HasDepth, bool generatemip) :
 	Resolution(Resolution), FrameBuffer(0), DepthBuffer(0), GenerateMip(generatemip), ColorBuffers{} {
 	glGenFramebuffers(1, &FrameBuffer);

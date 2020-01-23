@@ -6,6 +6,7 @@
 #include "Kernels/sharedstructs.h"
 #include <set>
 #include "Mesh.h"
+#include "Camera.h"
 
 namespace Scape {
 	namespace Rendering {
@@ -26,7 +27,7 @@ namespace Scape {
 			~Chunk(); 
 			Chunk(int PosX, int PosZ); 
 			Chunk() {}
-			void Generate(Generator & Generator, struct LightBaker & Baker); 
+			void Generate(Generator & Generator, struct LightBaker & Baker, Camera & Camera); 
 			void DrawChunk(const Shader & ChunkShader, const std::array<Model, static_cast<int>(Objects::Size)> & Models) const;
 
 
@@ -38,7 +39,7 @@ namespace Scape {
 			//light baking data: 
 			LightBakingStatus BakingStatus = LightBakingStatus::InActive;
 			unsigned char BakingSampleCount = 0;
-			unsigned int LightBakingImage = 0;
+			unsigned int LightBakingImage = 0, LightBakingImageGI = 0;
 			unsigned int WorldPositionDataImage = 0, NormalPositionDataImage = 0; 
 			unsigned int LightMapWidth = 0; 
 			std::vector<unsigned int> EntityData; 

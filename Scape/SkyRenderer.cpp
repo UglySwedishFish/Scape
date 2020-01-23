@@ -97,12 +97,14 @@ namespace Scape {
 		void SkyRendering::SetTimeOfDay(float TimeOfDay)
 		{
 
-			float TimeNormalized = TimeOfDay / 86400.; 
+			float TimeNormalized = glm::fract(TimeOfDay / 86400.); 
+
+			//TimeNormalized = int(TimeNormalized * 32) / 32.f; 
 
 			float TimeAngles = 360. * TimeNormalized;
 		
 			Direction.x = TimeAngles; 
-			Direction.y = TimeAngles;
+			Direction.y = TimeAngles / 2.f;
 
 			Orientation = Vector3f(0.0); 
 
@@ -110,6 +112,19 @@ namespace Scape {
 
 			SunColor = Atmospheric::GetSunColor(Orientation); 
 
+		}
+		void SkyRendering::GetTimeOfDayDirection(float TimeOfDay, Vector2f& Direction, Vector3f& Orientation)
+		{
+			float TimeNormalized = glm::fract(TimeOfDay / 86400.);
+
+			float TimeAngles = 360. * TimeNormalized;
+
+			Direction.x = TimeAngles;
+			Direction.y = TimeAngles / 2.f;
+
+			Orientation = Vector3f(0.0);
+
+			Move(Orientation, 1.0, Direction.x, Direction.y - 90.0);
 		}
 		void SkyRendering::UpdateShadowMap(Window& Window, Camera& Camera, WorldManager& World)
 		{
@@ -129,7 +144,7 @@ namespace Scape {
 
 			ShadowMaps[ToUpdate].Bind(); 
 
-			World.RenderWorld(Window, ShadowCamera, SkyCube, &ShadowDeferred);
+			World.RenderWorld(ShadowCamera, SkyCube, &ShadowDeferred);
 
 			ShadowMaps[ToUpdate].UnBind(Window); 
 

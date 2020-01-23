@@ -34,6 +34,7 @@ namespace Scape {
 
 			//TimeOfDay is measured in seconds 
 			void SetTimeOfDay(float TimeOfDay); 
+			void GetTimeOfDayDirection(float TimeOfDay, Vector2f& Direction, Vector3f& Orientation); 
 
 			Vector2f Direction; 
 			Vector3f Orientation; 

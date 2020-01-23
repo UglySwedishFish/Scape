@@ -18,6 +18,7 @@ namespace Scape {
 			void BindImage(int Target) { glActiveTexture(GL_TEXTURE0 + Target); glBindTexture(GL_TEXTURE_2D, ColorBuffer); }
 			void BindDepthImage(int Target) { glActiveTexture(GL_TEXTURE0 + Target); glBindTexture(GL_TEXTURE_2D, DepthBuffer); }
 			void UnBind(Window Window);
+			void UnBind(); 
 
 		};
 

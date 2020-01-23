@@ -1,12 +1,13 @@
 #include "LightBakerManager.h"
 #include "External/BlueNoiseData.h"
 #include <iostream>
+#include "SkyRenderer.h"
 
 namespace Scape {
 
 	namespace Rendering {
 
-		void LightBaker::PrepareLightBakingSystem()
+		void LightBaker::PrepareLightBakingSystem(SkyRendering& Sky)
 		{
 
 			glGenTextures(1, &SobolTexture);
@@ -58,8 +59,19 @@ namespace Scape {
 			LightMapShadeHandler.SetUniform("RayHitDataNormal", 3);
 			LightMapShadeHandler.SetUniform("PreviousImageDataAO", 4);
 			LightMapShadeHandler.SetUniform("AOImage", 5);
+			LightMapShadeHandler.SetUniform("LightingImages", 6);
 
+			LightMapShadeHandler.SetUniform("MaterialData", 30);
+			LightMapShadeHandler.SetUniform("Textures", 7);
+			LightMapShadeHandler.SetUniform("PreviousImageDataLighting", 8);
+			LightMapShadeHandler.SetUniform("ShadowCount", LIGHT_BAKING_LIGHTING_ZONES-2);
 
+			for (int ShadowMap = 0; ShadowMap < LIGHT_BAKING_LIGHTING_ZONES-2; ShadowMap++) {
+				std::string Title = "ShadowMaps[" + std::to_string(ShadowMap) + "]"; 
+				LightMapShadeHandler.SetUniform(Title, 10 + ShadowMap); 
+			}
+
+			
 			LightMapShadeHandler.UnBind(); 
 
 
@@ -104,10 +116,27 @@ namespace Scape {
 			OutPutData.CreateGLImage(GlobalKernelData.Context, { MAX_LIGHTMAP_RES, (int)Height  }, true);
 			OutPutData.CreateGLImage(GlobalKernelData.Context, { MAX_LIGHTMAP_RES, (int)Height }, false);
 
+			float TimeMax = 43200. / float(LIGHT_BAKING_LIGHTING_ZONES);
+
+			ShadowMaps.resize(LIGHT_BAKING_LIGHTING_ZONES - 2); 
+			ShadowMapOrientations.resize(LIGHT_BAKING_LIGHTING_ZONES - 2); 
+			ShadowMapRotations.resize(LIGHT_BAKING_LIGHTING_ZONES - 2); 
+			ShadowViewMatrices.resize(LIGHT_BAKING_LIGHTING_ZONES - 2); 
+
+			for (int Zone = 0; Zone < LIGHT_BAKING_LIGHTING_ZONES - 2; Zone++) {
+				ShadowMaps[Zone] = FrameBufferObject(Vector2i(LIGHTMAP_SHADOW_RES), GL_R8); 
+				Sky.GetTimeOfDayDirection(TimeMax * (Zone + 1), ShadowMapRotations[Zone], ShadowMapOrientations[Zone]); 
+			}
+
+
 		}
 
-		void LightBaker::AddToLightBakingQueue(Chunk& Chunk)
+		void LightBaker::AddToLightBakingQueue(Chunk& Chunk, Camera& Camera)
 		{
+
+			PrevCameraPosition = Camera.Position; 
+			ShadowSample = 0; 
+
 			Chunks.push_back(&Chunk); 
 			ConstructLightBakingDataImage(Chunk); 
 		}
@@ -437,12 +466,45 @@ namespace Scape {
 			delete[] CrunchedWorldPosData; 
 		}
 
-		void LightBaker::UpdateLightBaking()
+		void LightBaker::UpdateLightBaking(SkyRendering& Sky, WorldManager& World)
 		{
+
+			if (ShadowSample != LIGHT_BAKING_LIGHTING_ZONES - 3) {
+
+				glEnable(GL_DEPTH_TEST); 
+
+				//construct matrix 
+
+				Matrix4f ViewMatrix = Core::ViewMatrix(PrevCameraPosition + ShadowMapOrientations[ShadowSample] * 500.f, Vector3f(ShadowMapRotations[ShadowSample], 0.f)); 
+
+				Camera ShadowCamera; 
+				ShadowCamera.View = ViewMatrix; 
+				ShadowCamera.Project = Sky.ProjectionMatrices[2]; 
+
+				ShadowMaps[ShadowSample].Bind(); 
+
+				Sky.ShadowDeferred.Bind(); 
+
+				World.RenderWorld(ShadowCamera, Sky.SkyCube, &Sky.ShadowDeferred); 
+
+				Sky.ShadowDeferred.UnBind(); 
+
+				ShadowMaps[ShadowSample].UnBind();
+				
+				glDisable(GL_DEPTH_TEST);
+
+				ShadowViewMatrices[ShadowSample++] = ViewMatrix; 
+
+				return; 
+			}
+
+
 
 			if (Chunks.empty())
 				return; 
 			auto& Chunk = Chunks.front(); 
+
+			std::cout << "we're baking!\n";
 
 			unsigned int Height = LightBakingTextureResolutions[static_cast<int>(LightBakingQuality::TERRAIN)]; //constant! 
 
@@ -486,6 +548,14 @@ namespace Scape {
 
 			LightMapShadeHandler.Bind(); 
 
+			for (int i = 0; i < LIGHT_BAKING_LIGHTING_ZONES - 2; i++) {
+				std::string Title = "ShadowMatrices[" + std::to_string(i) + "]"; 
+				std::string Title2 = "LightDirection[" + std::to_string(i) + "]";
+				LightMapShadeHandler.SetUniform(Title, Sky.ProjectionMatrices[2] * ShadowViewMatrices[i]); 
+				LightMapShadeHandler.SetUniform(Title2, ShadowMapOrientations[i]);
+
+			}
+
 			LightMapShadeHandler.SetUniform("Frame", (Chunk->BakingSampleCount));
 
 			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -507,6 +577,29 @@ namespace Scape {
 			glActiveTexture(GL_TEXTURE5);
 			glBindTexture(GL_TEXTURE_2D, Chunk->LightBakingImage);
 			glBindImageTexture(5, Chunk->LightBakingImage, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_2D_ARRAY, Chunk->LightBakingImageGI);
+
+			glActiveTexture(GL_TEXTURE6);
+			glBindTexture(GL_TEXTURE_2D_ARRAY, Chunk->LightBakingImageGI);
+			glBindImageTexture(6, Chunk->LightBakingImageGI, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_RGBA8);
+			
+			
+
+			glActiveTexture(GL_TEXTURE30);
+			glBindTexture(GL_TEXTURE_2D, GetMaterialContainer());
+
+			glActiveTexture(GL_TEXTURE7);
+			glBindTexture(GL_TEXTURE_2D_ARRAY, GetCombinedTextures()[0]);
+
+			
+
+			
+
+
+			for (int i = 0; i < LIGHT_BAKING_LIGHTING_ZONES - 2; i++)
+				ShadowMaps[i].BindDepthImage(i + 10); 
 
 			DrawPostProcessQuad(); 
 
@@ -706,8 +799,37 @@ namespace Scape {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glBindTexture(GL_TEXTURE_2D, 0);
+			glGetError(); 
 
 
+			glGenTextures(1, &Chunk.LightBakingImageGI); 
+			
+
+			glBindTexture(GL_TEXTURE_2D_ARRAY, Chunk.LightBakingImageGI);
+			
+			glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, Width, Height, LIGHT_BAKING_LIGHTING_ZONES-2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+			
+			for (int SubImage = 0; SubImage < LIGHT_BAKING_LIGHTING_ZONES - 2; SubImage++) {
+				glTexSubImage3D(GL_TEXTURE_2D_ARRAY,
+					0,
+					0, 0, SubImage,
+					Width, Height, 1,
+					GL_RGBA,
+					GL_UNSIGNED_BYTE,
+					LightMapColors);
+			}
+			
+
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY,
+				GL_TEXTURE_MIN_FILTER,
+				GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY,
+				GL_TEXTURE_MAG_FILTER,
+				GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+			
 
 			delete[] GPUWorldPosData; 
 			delete[] GPUNormalData; 

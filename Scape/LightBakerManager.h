@@ -7,14 +7,16 @@
 #include "Kernel.h"
 #include "FrameBuffer.h"
 #include "Intersecter.h"
+#include "Camera.h"
 
 namespace Scape {
 
 	namespace Rendering {
 
-		const int LIGHT_BAKING_SAMPLES = 32; //todo: theoretically lightmap rendering can converge in O(log N) time rather than O(N), which is a neat little property that has to be researched further
+		const int LIGHT_BAKING_SAMPLES = 255; //todo: theoretically lightmap rendering can converge in O(log N) time rather than O(N), which is a neat little property that has to be researched further
 		const int LIGHT_BAKING_LIGHTING_ZONES = 16; 
 		const int MAX_LIGHTMAP_RES = 768; 
+		const int LIGHTMAP_SHADOW_RES = 2048; 
 
 		
 
@@ -39,12 +41,15 @@ namespace Scape {
 			std::vector<Chunk*> Chunks; 
 			std::vector<MeshLightBakingData> Data; 
 
-			void PrepareLightBakingSystem();
-			void AddToLightBakingQueue(Chunk& Chunk); 
+			void PrepareLightBakingSystem(struct SkyRendering & Sky);
+			void AddToLightBakingQueue(Chunk& Chunk, Camera & Camera); 
 			bool IsInLightBakingQueue(Chunk& Chunk);
 			void ConstructBakedMeshData(Model& Model, LightBakingQuality Quality = LightBakingQuality::HIGH);
-			void UpdateLightBaking();
-
+			void UpdateLightBaking(struct SkyRendering& Sky, struct WorldManager & World);
+			std::vector<FrameBufferObject> ShadowMaps;
+			std::vector<Vector3f> ShadowMapOrientations;
+			std::vector<Vector2f> ShadowMapRotations;
+			std::vector<Matrix4f> ShadowViewMatrices;
 		private: 
 
 			void ConstructLightBakingDataImage(Chunk& Chunk); 
@@ -65,9 +70,14 @@ namespace Scape {
 			KernelInterop2DImageList InputData, OutPutData; 
 			
 			std::unique_ptr<Intersecter> RayIntersecter; 
+			
+
+			Vector3f PrevCameraPosition; 
+			
+			
 
 			unsigned int SobolTexture, RankingTexture, ScramblingTexture; 
-
+			unsigned int ShadowSample = 0; 
 
 
 		};
