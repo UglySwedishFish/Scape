@@ -121,8 +121,9 @@ void main() {
 	float ShadowSample = MultiShadowPass(WorldPos, 0.003, Pass);  
 
 	vec3 Alb = UseAlbedo ? (texture(Albedo, TexCoord).xyz) : vec3(1.0); 
+	float ShadowIntensity = UseAlbedo ? 1.0 : 0.0; 
 
-	Lighting = Alb * (ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
+	Lighting = Alb * (ShadowIntensity * ShadowSample * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
 	//Lighting = texture(LightMap, TexCoord).xyz; 
 	Lighting = pow(Lighting, vec3(0.45454545)); 
 
