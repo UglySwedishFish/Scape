@@ -41,3 +41,8 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 ![image](https://github.com/UglySwedishFish/Scape/blob/master/Scape/Media/Comparasion.png?raw=true)
 
 **No lighting vs baked lighting**
+
+![image](https://github.com/UglySwedishFish/Scape/blob/master/Scape/Media/ComparasionGI.png?raw=true)
+
+**Showcasing the effects of indirect lighting**
+
