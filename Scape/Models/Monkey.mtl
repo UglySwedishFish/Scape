@@ -10,5 +10,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\truea\Documents\Megascans Library\downloaded\3d\rlCay\Aset_M_rlCay_4K_Albedo.jpg
-map_Ka C:\\Users\\truea\\Documents\\Megascans Library\\downloaded\\3d\\rlCay\\Aset_M_rlCay_4K_Normal_LOD0.jpg
+map_Kd Textures\Albedo.jpg
+map_Ka Textures\Normal.jpg

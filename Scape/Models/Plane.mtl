@@ -10,5 +10,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Ka C:\\Users\\truea\\Documents\\Megascans Library\\downloaded\\3d\\rock_assembly_th5fchafa\\th5fchafa_4K_Normal_LOD0.jpg
-map_Kd C:\\Users\\truea\\Documents\\Megascans Library\\downloaded\\3d\\rock_assembly_th5fchafa\\th5fchafa_4K_Albedo.jpg
+map_Ka Textures\RockNormal.jpg
+map_Kd Textures\RockAlbedo.jpg
