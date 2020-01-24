@@ -11,6 +11,7 @@ namespace Scape {
 		glClearColor(0.0, 0.0, 0.0, 0.0);
 		Core::PrepareHaltonSequence();
 		PreparePostProcess();
+		World.LightBaker.PrepareLightBakingSystem(Sky);
 		World.PrepareWorldManager(Window);
 		Sky.PrepareSkyRenderer(Window); 
 		Direct.PrepareDirectLighting(Window); 
@@ -62,11 +63,17 @@ namespace Scape {
 				TimeOfDay += 36000. * Window.GetFrameTime(); 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 				TimeOfDay -= 36000. * Window.GetFrameTime();
+
+			TimeOfDay = glm::clamp(TimeOfDay, 0.0f, 86400.f / 2.f); 
+
 			Sky.SetTimeOfDay(TimeOfDay); 
+			World.SetSunDetail(Vector4f(Sky.SunColor, TimeOfDay)); 
 
-
-
+		
 			World.HandleWorldGeneration(Camera); 
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+				World.LightBaker.UpdateLightBaking(Sky,World);
 
 			Frames++;
 			Window.SetFrameTime(GameClock.getElapsedTime().asSeconds());
@@ -89,7 +96,7 @@ namespace Scape {
 			glEnable(GL_DEPTH_TEST); 
 
 			World.DeferredFBO.Bind(); 
-			World.RenderWorld(Window, Camera, Sky.SkyCube); 
+			World.RenderWorld(Camera, Sky.SkyCube); 
 			World.DeferredFBO.UnBind();
 			Direct.RenderDirectLighting(Window, Camera, World, Sky); 
 

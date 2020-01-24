@@ -39,6 +39,7 @@ namespace Scape {
 			DirectShader.SetUniform("SunColor", Sky.SunColor); 
 			DirectShader.SetUniform("Frame", Window.GetFrameCount()); 
 			DirectShader.SetUniform("LightDirection", Sky.Orientation);
+			DirectShader.SetUniform("UseAlbedo", !sf::Keyboard::isKeyPressed(sf::Keyboard::U));
 
 			for (int i = 0; i < 3; i++) {
 				std::string Title = "ShadowMatrices[" + std::to_string(i) + "]"; 

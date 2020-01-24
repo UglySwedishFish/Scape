@@ -22,10 +22,10 @@ namespace Scape {
 
 		}
 
-		void Chunk::Generate(Generator& Generator, LightBaker& Baker)
+		void Chunk::Generate(Generator& Generator, LightBaker& Baker, Camera& Camera)
 		{
 			Entities = Generator.GetGeneratedModels(PosX, PosZ); 
-			Baker.AddToLightBakingQueue(*this);
+			Baker.AddToLightBakingQueue(*this, Camera);
 			CreateModelStructure(Baker.GlobalKernelData);
 			GenerateChunkMesh(Generator); 
 		}
@@ -42,6 +42,10 @@ namespace Scape {
 
 				glActiveTexture(GL_TEXTURE7);
 				glBindTexture(GL_TEXTURE_2D, LightBakingImage);
+
+				glActiveTexture(GL_TEXTURE9);
+				glBindTexture(GL_TEXTURE_2D_ARRAY, LightBakingImageGI);
+
 
 				Models[ModelIndex.first].DrawWithMaterialsInstanced(ChunkShader, 2, ModelIndex.second); 
 

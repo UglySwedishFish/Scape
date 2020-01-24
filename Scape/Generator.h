@@ -17,8 +17,8 @@ namespace Scape {
 
 		const enum class Objects : int {MonkeyHead, Torus, Sphere, Size};
 		const std::array<LightBakingQuality, static_cast<int>(Objects::Size)> ObjectLightMapQuality{
-			LightBakingQuality::ULTRA,
-			LightBakingQuality::ULTRA,
+			LightBakingQuality::HIGH,
+			LightBakingQuality::HIGH,
 			LightBakingQuality::MEDIUM
 		}; 
 		const std::array<std::tuple<std::string, std::string>, static_cast<int>(Objects::Size)> ObjectLocations = {

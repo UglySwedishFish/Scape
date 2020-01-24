@@ -1,4 +1,5 @@
 #include "WorldManager.h"
+#include "LightBakerManager.h"
 
 namespace Scape {
 
@@ -22,11 +23,11 @@ namespace Scape {
 			EntityDeferredShader.SetUniform("EmissiveMap", 6);
 			EntityDeferredShader.SetUniform("LightMap", 7);
 			EntityDeferredShader.SetUniform("Sky", 8);
+			EntityDeferredShader.SetUniform("LightMapGI", 9);
 
 			EntityDeferredShader.UnBind();
 
 			Generator.PrepareGenerator(); 
-			LightBaker.PrepareLightBakingSystem(); 
 
 			int ModelIdx = 0; 
 
@@ -36,6 +37,8 @@ namespace Scape {
 				Models[ModelIdx] = Model(ModelPath.c_str(), ModelLightMapUVPath.c_str(), Importer); 
 				LightBaker.ConstructBakedMeshData(Models[ModelIdx], ObjectLightMapQuality[ModelIdx++]); 
 			}
+			UpdateMaterialContainer();
+			ConstructCombinedTextures(); 
 
 		}
 
@@ -47,7 +50,7 @@ namespace Scape {
 			if (Chunks.find(0) == Chunks.end()) {
 				if (Chunks[0].find(0) == Chunks[0].end()) {
 					Chunks[0][0] = std::make_unique<Chunk>(0,0); 
-					Chunks[0][0]->Generate(Generator, LightBaker); 
+					Chunks[0][0]->Generate(Generator, LightBaker, Camera); 
 					HasGenerated = true; 
 				}
 
@@ -66,12 +69,16 @@ namespace Scape {
 
 
 			}
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-			LightBaker.UpdateLightBaking(); 
+			
 
 		}
 
-		void WorldManager::RenderWorld(Window& Window, Camera& Camera, CubeMultiPassFrameBufferObject& SkyCube, Shader* OverideShader)
+		void WorldManager::SetSunDetail(Vector4f Detail)
+		{
+			SunDetail = Detail; 
+		}
+
+		void WorldManager::RenderWorld(Camera& Camera, CubeMultiPassFrameBufferObject& SkyCube, Shader* OverideShader)
 		{
 
 			Shader* CurrentShader = &EntityDeferredShader;
@@ -91,10 +98,15 @@ namespace Scape {
 
 			CurrentShader->Bind();
 			CurrentShader->SetUniform("IdentityMatrix", Camera.Project * Camera.View);
+			CurrentShader->SetUniform("TimeOfDay", SunDetail.w);
+			CurrentShader->SetUniform("SunColor", Vector3f(SunDetail));
+			CurrentShader->SetUniform("LightingZones", LIGHT_BAKING_LIGHTING_ZONES);
 
 			glActiveTexture(GL_TEXTURE8); 
 			glBindTexture(GL_TEXTURE_CUBE_MAP, SkyCube.Texture[1]);
 			
+
+
 
 			for (int ChunkIdx = 0; ChunkIdx < ChunkIterator.size(); ChunkIdx++) {
 				ChunkIterator[ChunkIdx]->DrawChunk(*CurrentShader, Models);
