@@ -68,9 +68,8 @@ namespace Scape {
 
 			Sky.SetTimeOfDay(TimeOfDay); 
 			World.SetSunDetail(Vector4f(Sky.SunColor, TimeOfDay)); 
-
-		
 			World.HandleWorldGeneration(Camera); 
+
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 				World.LightBaker.UpdateLightBaking(Sky,World);

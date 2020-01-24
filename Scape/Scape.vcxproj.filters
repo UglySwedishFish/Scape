@@ -108,6 +108,9 @@
     <ClCompile Include="Direct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MinifoliageBaker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shaders\Generator\NoiseGenerator.h">
@@ -177,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Direct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinifoliageBaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

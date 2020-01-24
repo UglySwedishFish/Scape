@@ -149,6 +149,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshHandler.cpp" />
+    <ClCompile Include="MinifoliageBaker.cpp" />
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyRenderer.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="LightBakerManager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshHandler.h" />
+    <ClInclude Include="MinifoliageBaker.h" />
     <ClInclude Include="Pipeline.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shaders\Generator\NoiseGenerator.h" />
