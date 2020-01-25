@@ -140,6 +140,7 @@
     <ClCompile Include="Chunks.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Direct.cpp" />
+    <ClCompile Include="FoliageRenderer.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="include\GL\glad.c" />
@@ -167,6 +168,7 @@
     <ClInclude Include="DependenciesMath.h" />
     <ClInclude Include="Direct.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FoliageRenderer.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Generator.h" />
     <ClInclude Include="Intersecter.h" />
@@ -191,6 +193,10 @@
     <None Include="Shaders\Direct\shader.vert" />
     <None Include="Shaders\EntityDeferred\shader.frag" />
     <None Include="Shaders\EntityDeferred\shader.vert" />
+    <None Include="Shaders\FoliageBaker\shader.frag" />
+    <None Include="Shaders\FoliageBaker\shader.vert" />
+    <None Include="Shaders\FoliageRenderer\shader.frag" />
+    <None Include="Shaders\FoliageRenderer\shader.vert" />
     <None Include="Shaders\Generator\shader.frag" />
     <None Include="Shaders\Generator\shader.vert" />
     <None Include="Shaders\HitHandler\shader.frag" />

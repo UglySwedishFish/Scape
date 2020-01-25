@@ -2,6 +2,7 @@
 
 #include "Direct.h"
 #include "Camera.h"
+#include "FoliageRenderer.h"
 namespace Scape {
 
 	using namespace Rendering; 
@@ -11,7 +12,7 @@ namespace Scape {
 		WorldManager World; 
 		SkyRendering Sky; 
 		DirectRenderer Direct; 
-
+		FoliageRenderer FoliageRenderer; 
 
 
 		void PreparePipeline(Camera& Camera, Window& Window);

@@ -43,6 +43,12 @@
     <Filter Include="Shaders\Direct">
       <UniqueIdentifier>{61173ad1-5e6c-4c4b-9c89-be638d6fa35a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\FoliageBaker">
+      <UniqueIdentifier>{668a5c66-fcd4-4b28-a4f8-127b87c38e0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\FoliageRenderer">
+      <UniqueIdentifier>{038a7835-6259-4d18-8aa7-68d549383724}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -109,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MinifoliageBaker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FoliageRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,6 +194,9 @@
     <ClInclude Include="MinifoliageBaker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FoliageRenderer.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Generator\shader.frag">
@@ -237,6 +249,18 @@
     </None>
     <None Include="..\..\UglySwedishFish\SCP-354\SCP-354\Shaders\EntityDeferred\shaderSimple.frag">
       <Filter>Shaders\EntityDeferred</Filter>
+    </None>
+    <None Include="Shaders\FoliageBaker\shader.frag">
+      <Filter>Shaders\FoliageBaker</Filter>
+    </None>
+    <None Include="Shaders\FoliageBaker\shader.vert">
+      <Filter>Shaders\FoliageBaker</Filter>
+    </None>
+    <None Include="Shaders\FoliageRenderer\shader.frag">
+      <Filter>Shaders\FoliageRenderer</Filter>
+    </None>
+    <None Include="Shaders\FoliageRenderer\shader.vert">
+      <Filter>Shaders\FoliageRenderer</Filter>
     </None>
   </ItemGroup>
 </Project>

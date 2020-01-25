@@ -1,4 +1,6 @@
 #include "Pipeline.h"
+#include "MinifoliageBaker.h"
+
 
 namespace Scape {
 
@@ -17,6 +19,12 @@ namespace Scape {
 		Direct.PrepareDirectLighting(Window); 
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
+
+		FoliageBaker FoliageBaker; 
+		FoliageBaker.AddFoliageGeometry(FoliageGeometry(FoliageGeometryType::CIRCLE, Vector2f(0.1), 0.0, Vector2f(0.5), Vector2f(0.1,0.0))); 
+		FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
+		FoliageBaker.BakeFoliage("Foliage/FoliageData.png"); 
+		FoliageRenderer.PrepareFoligeRenderer(Window); 
 
 	}
 
@@ -94,10 +102,16 @@ namespace Scape {
 
 			glEnable(GL_DEPTH_TEST); 
 
-			World.DeferredFBO.Bind(); 
+		/*	World.DeferredFBO.Bind(); 
 			World.RenderWorld(Camera, Sky.SkyCube); 
 			World.DeferredFBO.UnBind();
 			Direct.RenderDirectLighting(Window, Camera, World, Sky); 
+
+			
+
+			*/
+
+			FoliageRenderer.RenderFoliage(Camera, Window); 
 
 			glFinish();
 

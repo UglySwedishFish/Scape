@@ -1,0 +1,1 @@
+Type: CIRCLE Position: 0.5 0.5 Size: 0.1 0.1 Rotation: 0 Shift:0.1 0
