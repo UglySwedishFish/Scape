@@ -4,11 +4,13 @@ in vec2 TexCoord;
 in vec3 WorldPos; 
 layout(location = 0) out vec4 Lighting;
 
-uniform sampler3D RayData; 
+uniform sampler3D RayData[16]; 
 uniform vec3 CameraPosition; 
 uniform float MaxLength; 
 uniform float Time; 
+uniform sampler2D Wind; 
 uniform bool RandTexCoord; 
+
 
 const float pi = 3.141592;
 const vec2 hexRatio = vec2(1.0, sqrt(3.0));
@@ -45,12 +47,33 @@ vec3 GetTriangleInterpNode(in vec2 pos, in float freq, in int nodeIndex)
   return vec3(hexInfo.xy / freq, dist);
 }
 
-vec3 GetGrassSample(vec3 Incident,vec2 IncidentXZ,float Angle, vec2 TextureCoordinate, vec3 WorldPos) {
-	vec4 Sample = texture(RayData, vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
+
+
+vec3 GetGrassSample(vec3 Incident,vec2 IncidentXZ,float Angle, vec2 TextureCoordinate, vec3 WorldPos, float Time) {
+
+	int Frame1 = int(Time*12); 
+	int Frame2 = Frame1 + 1; 
+
+	Frame1 = Frame1 & 15; 
+	Frame2 = Frame2 & 15; 
+
+	vec4 Sample1 = texture(RayData[Frame1], vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
+	vec4 Sample2 = texture(RayData[Frame2], vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
+	
+	//figure out deviation 
+
+	
+	float Traversal1 = ((int(Sample1.z * 255) + int(Sample1.w * 255) * 255) / 65536.f) * MaxLength; 
+	float Traversal2 = ((int(Sample2.z * 255) + int(Sample2.w * 255) * 255) / 65536.f) * MaxLength; 
+
+	float Traversal; 
+	float TimeFract = fract(Time*12.0); 
+	Traversal = TimeFract > 1.0-clamp((abs(Traversal2-Traversal1)/min(Traversal1,Traversal2))*.1,0.0,1.0) ? Traversal2 : Traversal1; 
+
+
 
 	//construct 2D traversal 
 
-	float Traversal = ((int(Sample.z * 255) + int(Sample.w * 255) * 255) / 65536.f) * MaxLength; 
 
 	return vec3(0.0,0.0,Traversal); 
 	
@@ -79,8 +102,11 @@ void main() {
 
 	vec3 Data = vec3(100000.0); 
 
+	vec2 ATexCoord = TexCoord; 
+
+	vec2 Wind = texture(Wind, TexCoord * 3.0).xz * 2. - 1.; 
 	for(int i = 0; i < 3; i++) {
-		vec3 interpNode = GetTriangleInterpNode(TexCoord, 10.0, i);
+		vec3 interpNode = GetTriangleInterpNode(ATexCoord, 20.0, i);
 
 		//THATS WHEN ITS BACK TO THE LAB AGAIN 
 
@@ -90,11 +116,14 @@ void main() {
 
 		mat2 rotation = mat2(cos(ang), sin(ang), -sin(ang), cos(ang));
 
-		vec2 NewCoord = TexCoord * rotation; 
+		vec2 NewCoord = ATexCoord * rotation; 
+
+		NewCoord += Wind * cos(Time) * 0.003; 
+
 		float NewAngle = fract((Angle + ang) / 6.28318531) * 6.28318531; 
 
 
-		vec3 Sample = GetGrassSample(Incident, IncidentXZ, NewAngle, 15.0 * NewCoord, WorldPos); 
+		vec3 Sample = GetGrassSample(Incident, IncidentXZ, NewAngle, 32.0 * NewCoord, WorldPos,Time); 
 
 		Data.z = min(Data.z,Sample.z); 
 	}
@@ -104,6 +133,10 @@ void main() {
 	float MaxTraversal = 1.0f / abs(Incident.y);
 	
 	Lighting.xyz = (vec3(WorldPos.x, WorldPos.y + 1.2, WorldPos.z) + vec3(Incident.x,Incident.y,Incident.z) * min(Traversal3D,MaxTraversal)) / 1.0f; 
+	Lighting.x = 0.25; 
+	Lighting.z = 0.0; 
+	
+	Lighting.xyz = mix(Lighting.xyz, vec3(0.35,0.0,0.0),0.25); 
 
 
 }

@@ -33,56 +33,67 @@ namespace Scape {
 			}
 
 
+			unsigned int FoliageDataTexture;
+			glGenTextures(1, &FoliageDataTexture);
 
-
-
-			unsigned int FoliageDataTexture; 
-			glGenTextures(1, &FoliageDataTexture); 
-
-			glBindTexture(GL_TEXTURE_1D, FoliageDataTexture); 
-			glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB16F, Geometry.size() * 3, 0, GL_RGB, GL_FLOAT, FoliageData); 
-			glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+			glBindTexture(GL_TEXTURE_1D, FoliageDataTexture);
+			glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB16F, Geometry.size() * 3, 0, GL_RGB, GL_FLOAT, FoliageData);
+			glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glBindTexture(GL_TEXTURE_1D, 0); 
+			glBindTexture(GL_TEXTURE_1D, 0);
 
-			glFinish(); 
+			glFinish();
 
-			FoliageBakerShader.Bind(); 
+			float TimeAddon = 6.28318531 / 16.f; 
 
-			FoliageOutPutBuffer.Bind(); 
+			unsigned char* Pixels = new unsigned char[FoliageDirections * FoliageResolution * FoliageResolution * 4];
 
-			FoliageBakerShader.SetUniform("TextureSize", FoliageResolution); 
-			FoliageBakerShader.SetUniform("RayCount", FoliageDirections); 
-			FoliageBakerShader.SetUniform("MinStepSize", MinStepSize);
-			FoliageBakerShader.SetUniform("MaxStepLength", MaxLenght);
-			FoliageBakerShader.SetUniform("Primitives", 0);
-			FoliageBakerShader.SetUniform("PrimitiveCount", static_cast<int>(Geometry.size()));
-
-			glActiveTexture(GL_TEXTURE0); 
-			glBindTexture(GL_TEXTURE_1D, FoliageDataTexture); 
-
-			DrawPostProcessQuad(); 
-
-			FoliageOutPutBuffer.UnBind(); 
-
-			FoliageBakerShader.UnBind(); 
-
-			glFinish(); 
-
-			unsigned char* Pixels = new unsigned char[FoliageDirections * FoliageResolution * FoliageResolution * 4]; 
-
-			glBindTexture(GL_TEXTURE_2D, FoliageOutPutBuffer.ColorBuffer); 
-			glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, Pixels); 
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			glFinish(); 
-
-			sf::Image* OutPutImage = new sf::Image(); 
-			OutPutImage->create(FoliageResolution * FoliageDirections, FoliageResolution, Pixels); 
-			OutPutImage->saveToFile(FileName); 
+			for (int i = 0; i < 16; i++) {
 
 
-			delete OutPutImage; 
+				
+
+
+				FoliageBakerShader.Bind();
+
+				FoliageOutPutBuffer.Bind();
+
+				FoliageBakerShader.SetUniform("TextureSize", FoliageResolution);
+				FoliageBakerShader.SetUniform("RayCount", FoliageDirections);
+				FoliageBakerShader.SetUniform("MinStepSize", MinStepSize);
+				FoliageBakerShader.SetUniform("MaxStepLength", MaxLenght);
+				FoliageBakerShader.SetUniform("Primitives", 0);
+				FoliageBakerShader.SetUniform("PrimitiveCount", static_cast<int>(Geometry.size()));
+				FoliageBakerShader.SetUniform("Time", TimeAddon * i);
+
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_1D, FoliageDataTexture);
+
+				DrawPostProcessQuad();
+
+				FoliageOutPutBuffer.UnBind();
+
+				FoliageBakerShader.UnBind();
+
+				glFinish();
+
+
+				glBindTexture(GL_TEXTURE_2D, FoliageOutPutBuffer.ColorBuffer);
+				glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, Pixels);
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				glFinish();
+
+				sf::Image* OutPutImage = new sf::Image();
+				OutPutImage->create(FoliageResolution * FoliageDirections, FoliageResolution, Pixels);
+				OutPutImage->saveToFile(FileName + std::to_string(i) + ".png");
+
+				delete OutPutImage; 
+
+			}
+
+			
+
 			glDeleteTextures(1, &FoliageDataTexture); 
 			delete[] FoliageData; 
 			delete[] Pixels; 

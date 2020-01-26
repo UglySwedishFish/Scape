@@ -21,9 +21,23 @@ namespace Scape {
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
 		FoliageBaker FoliageBaker; 
-		FoliageBaker.AddFoliageGeometry(FoliageGeometry(FoliageGeometryType::CIRCLE, Vector2f(0.1), 0.0, Vector2f(0.5), Vector2f(0.1,0.0))); 
+
+		for (int i = 0; i < 64; i++) {
+
+			Vector2f Position = fract(Vector2f(float(rand()) / float(RAND_MAX), float(rand()) / float(RAND_MAX)) * 1.25f - .125f); 
+
+			float Angle = float(rand()) / float(RAND_MAX); 
+			Angle *= 6.28; 
+
+			FoliageBaker.AddFoliageGeometry(FoliageGeometry(FoliageGeometryType::CIRCLE, Vector2f(0.1), 0.0, Position, 0.2f * Vector2f(cos(Angle), sin(Angle))));
+
+
+
+		}
+
+		
 		FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
-		FoliageBaker.BakeFoliage("Foliage/FoliageData.png"); 
+		FoliageBaker.BakeFoliage("Foliage/FoliageData"); 
 		FoliageRenderer.PrepareFoligeRenderer(Window); 
 
 	}
@@ -52,6 +66,11 @@ namespace Scape {
 					switch (Event.key.code) {
 					case sf::Keyboard::Escape:
 						return;
+						break;
+
+					case sf::Keyboard::R:
+						if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+							FoliageRenderer.ReloadFoliage(); 
 						break;
 
 					}

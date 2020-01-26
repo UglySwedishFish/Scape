@@ -10,8 +10,8 @@ namespace Scape {
 	namespace Rendering {
 
 
-		const unsigned short FoliageDirections = 256; 
-		const unsigned short FoliageResolution = 64;
+		const unsigned short FoliageDirections = 128; 
+		const unsigned short FoliageResolution = 128;
 		const float MinStepSize = 0.01f; 
 		const float MaxLenght = 100.f; //the max distance the ray can travel  
 

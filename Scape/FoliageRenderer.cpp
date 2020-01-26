@@ -10,11 +10,22 @@ namespace Scape {
 		void FoliageRenderer::PrepareFoligeRenderer(Window& Window)
 		{
 			FoliageRenderer = Shader("Shaders/FoliageRenderer"); 
-			RayData = LoadTextureGL3D("Foliage/FoliageData.png", Vector3i(FoliageResolution, FoliageDirections, FoliageResolution));
+
+			for (int i = 0; i < 16; i++) {
+				std::string Title = "Foliage/FoliageData" + std::to_string(i) + ".png"; 
+				RayData[i] = LoadTextureGL3D(Title.c_str(), Vector3i(FoliageResolution, FoliageDirections, FoliageResolution));
+				
+			}
+
+			WindTexture = LoadTextureGL("Foliage/Wind.jpg"); 
 
 			FoliageRenderer.Bind(); 
 			FoliageRenderer.SetUniform("MaxLength", MaxLenght); 
-			FoliageRenderer.SetUniform("RayData", 0);
+			for (int i = 0; i < 16; i++) {
+				std::string Title = "RayData[" + std::to_string(i) + "]"; 
+				FoliageRenderer.SetUniform(Title.c_str(), i);
+			}
+			FoliageRenderer.SetUniform("Wind", 16); 
 			FoliageRenderer.UnBind();
 
 		}
@@ -31,13 +42,29 @@ namespace Scape {
 			FoliageRenderer.SetUniform("Time", Window.GetTimeOpened());
 			FoliageRenderer.SetUniform("RandTexCoord", !sf::Keyboard::isKeyPressed(sf::Keyboard::R));
 
-			RayData.Bind(0); 
+			for(int i = 0; i < 16; i++)
+				RayData[i].Bind(i); 
+
+			WindTexture.Bind(16); 
 
 			DrawPostProcessQuad(); 
 
 			FoliageRenderer.UnBind(); 
 
 
+		}
+
+		void FoliageRenderer::ReloadFoliage()
+		{
+			FoliageRenderer.Reload("Shaders/FoliageRenderer"); 
+			FoliageRenderer.Bind();
+			FoliageRenderer.SetUniform("MaxLength", MaxLenght);
+			for (int i = 0; i < 16; i++) {
+				std::string Title = "RayData[" + std::to_string(i) + "]";
+				FoliageRenderer.SetUniform(Title.c_str(), i);
+			}
+			FoliageRenderer.SetUniform("Wind", 16);
+			FoliageRenderer.UnBind();
 		}
 
 	}

@@ -16,11 +16,12 @@ namespace Scape {
 		struct FoliageRenderer {
 
 			Shader FoliageRenderer; 
-			TextureGL3D RayData; 
-
+			TextureGL3D RayData[16]; 
+			TextureGL WindTexture; 
 
 			void PrepareFoligeRenderer(Window & Window); 
 			void RenderFoliage(Camera& Camera, Window& Window); 
+			void ReloadFoliage(); 
 
 		};
 

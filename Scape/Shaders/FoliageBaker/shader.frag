@@ -9,9 +9,10 @@ uniform int TextureSize;
 uniform int RayCount; 
 uniform float MinStepSize; 
 uniform float MaxStepLength; 
-
+uniform float Time; 
 uniform sampler1D Primitives; 
 uniform int PrimitiveCount; 
+
 
 
 struct Primitive {
@@ -46,7 +47,7 @@ float SignedDistanceUnitCircle(vec2 p, float r) {
 
 bool HandleCircle(inout float MinDistance, inout vec3 NormalHit, float TraversalDistance, Primitive Data, vec2 Position) {
 	
-	vec2 ActualP = (fract(Position + vec2(0.2,0.2) * cos(TraversalDistance*4.0))-Data.Position) / Data.Size ; 
+	vec2 ActualP = (fract(Position + Data.Shift * cos(Time) * cos(TraversalDistance*4.0))-Data.Position) / Data.Size ; 
 
 	float Dist = SignedDistanceUnitCircle(ActualP, clamp(TraversalDistance,0.01,1.0)); 
 
