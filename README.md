@@ -12,6 +12,7 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Very fast GPU accelerated monte-carlo light baker for hemispherical lighting and ambient occlusion.**
 * **Atmospheric sky rendering** 
 * **Basic direct lighting + global illumination for direct lighting (1 bounce)**
+* **Constant time grass rendering using 2d lightfields**
 
 # What are the future plans? 
 
@@ -26,7 +27,6 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)**
 * **Basic skeletal animation support** 
 * **Basic networking support. Let people explore together!**
-* **Look into potential of using lightfields for microgeometry such as grass** 
 * **Decal support for smaller geometry such as branches or leaves that have falled on the ground** 
 * **Add support for multiple biomes** 
 * **Tesselation / POM support for high quality displacement mapping** 
