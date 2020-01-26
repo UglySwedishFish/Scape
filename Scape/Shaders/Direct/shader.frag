@@ -127,6 +127,6 @@ void main() {
 	//Lighting = texture(LightMap, TexCoord).xyz; 
 	Lighting = pow(Lighting, vec3(0.45454545)); 
 
-	//Lighting = pow(texture(ShadowMaps[0],TexCoord).xxx,vec3(1000.)); 
 
+	//Lighting = pow(texture(ShadowMaps[0],TexCoord).xxx,vec3(1000.)); 
 }

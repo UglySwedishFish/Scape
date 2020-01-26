@@ -20,10 +20,10 @@ namespace Scape {
 
 			ModelEntity ThisEntity; 
 
-			Vector2f PositionXZ = (Vector2f(PositionX, PositionZ) + Vector2f(rand(), rand()) / Vector2f(RAND_MAX)) * Vector2f(CHUNK_SIZE); 
+			Vector2f PositionXZ = -(Vector2f(PositionX, PositionZ) + Vector2f(rand(), rand()) / Vector2f(RAND_MAX)) * Vector2f(CHUNK_SIZE); 
 			float Height = GetHeightAt(PositionXZ); 
 
-			ThisEntity.Position = Vector3f(PositionXZ.x, Height, PositionXZ.y); 
+			ThisEntity.Position = Vector3f(PositionXZ.x, 0.0, PositionXZ.y); 
 			ThisEntity.Rotation = Vector3f(0.0); 
 			ThisEntity.Scale = Vector3f(1.0); 
 			ThisEntity.ModelMatrix = Core::ModelMatrix(ThisEntity.Position, ThisEntity.Rotation, ThisEntity.Scale); 
@@ -31,12 +31,12 @@ namespace Scape {
 
 			FinalEntities.push_back(ThisEntity); 
 
-			if (ThisEntity.ModelIndex == 0) {
+			/*if (ThisEntity.ModelIndex == 0) {
 
 				ThisEntity.ModelIndex = 1; 
 				FinalEntities.push_back(ThisEntity);
 
-			}
+			}*/
 
 		}
 

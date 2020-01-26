@@ -49,6 +49,9 @@
     <Filter Include="Shaders\FoliageRenderer">
       <UniqueIdentifier>{038a7835-6259-4d18-8aa7-68d549383724}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\TerrainDeferred">
+      <UniqueIdentifier>{15b94e0c-e842-4d5c-ab23-635430530fec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -261,6 +264,12 @@
     </None>
     <None Include="Shaders\FoliageRenderer\shader.vert">
       <Filter>Shaders\FoliageRenderer</Filter>
+    </None>
+    <None Include="Shaders\TerrainDeferred\shader.frag">
+      <Filter>Shaders\TerrainDeferred</Filter>
+    </None>
+    <None Include="Shaders\TerrainDeferred\shader.vert">
+      <Filter>Shaders\TerrainDeferred</Filter>
     </None>
   </ItemGroup>
 </Project>

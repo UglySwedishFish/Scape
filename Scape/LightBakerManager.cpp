@@ -745,9 +745,19 @@ namespace Scape {
 
 				for (int y = 0; y < Height; y++) {
 
-					GPUNormalData[y * Width + x] = FinalLightMapData.NormalData[y][x];
-					GPUWorldPosData[y * Width + x] = FinalLightMapData.WorldPositionData[y][x]; 
+					if (x < 128) {
 
+						Vector3f Normal = Vector3f(0.0, 1.0, 0.0); 
+						Vector3f Vertice = Vector3f(float(x * CHUNK_SIZE) / 128., 0.0, float(y * CHUNK_SIZE) / 128.); 
+
+						GPUNormalData[y * Width + x] = Normal; 
+						GPUWorldPosData[y * Width + x] = Vertice; 
+
+					}
+					else {
+						GPUNormalData[y * Width + x] = FinalLightMapData.NormalData[y][x];
+						GPUWorldPosData[y * Width + x] = FinalLightMapData.WorldPositionData[y][x];
+					}
 				}
 
 			}

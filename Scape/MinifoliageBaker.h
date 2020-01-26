@@ -2,7 +2,7 @@
 
 #include "Shader.h"
 #include "FrameBuffer.h"
-
+#include "Texture.h"
 
 
 namespace Scape {
@@ -10,8 +10,8 @@ namespace Scape {
 	namespace Rendering {
 
 
-		const unsigned short FoliageDirections = 128; 
-		const unsigned short FoliageResolution = 128;
+		const unsigned short FoliageDirections = 64; 
+		const unsigned short FoliageResolution = 64;
 		const float MinStepSize = 0.01f; 
 		const float MaxLenght = 100.f; //the max distance the ray can travel  
 
@@ -44,6 +44,7 @@ namespace Scape {
 			
 			std::vector<FoliageGeometry> Geometry; 
 			Shader FoliageShader; 
+			TextureGL WindTexture; 
 
 			
 			void BakeFoliage(const std::string & FileName); 

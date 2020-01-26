@@ -13,17 +13,18 @@ namespace Scape {
 
 			std::unordered_map<int, std::unordered_map<int, std::unique_ptr<Chunk>>> Chunks; 
 			std::array<Model, static_cast<int>(Objects::Size)> Models; 
-			MultiPassFrameBufferObject DeferredFBO; 
+			MultiPassFrameBufferObject DeferredFBO, DeferredFBOTerrain; 
 			Vector4f SunDetail; 
 
 			void PrepareWorldManager(Window& Window); 
 			void HandleWorldGeneration(Camera & Camera); 
 			void SetSunDetail(Vector4f Detail); 
 			void RenderWorld(Camera& Camera, CubeMultiPassFrameBufferObject & SkyCube, Shader * OverideShader = nullptr); 
+			void RenderWorldTerrain(Camera& Camera, CubeMultiPassFrameBufferObject& SkyCube, Shader* OverideShader = nullptr);
 			LightBaker LightBaker;
 		private: 
 			Generator Generator; 
-			Shader EntityDeferredShader; 
+			Shader EntityDeferredShader, TerrainDeferredShader; 
 			std::vector<const Chunk*> ChunkIterator;
 			std::unique_ptr<Assimp::Importer> Importer; 
 

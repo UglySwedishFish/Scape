@@ -22,7 +22,7 @@ namespace Scape {
 
 		FoliageBaker FoliageBaker; 
 
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < 8; i++) {
 
 			Vector2f Position = fract(Vector2f(float(rand()) / float(RAND_MAX), float(rand()) / float(RAND_MAX)) * 1.25f - .125f); 
 
@@ -36,8 +36,8 @@ namespace Scape {
 		}
 
 		
-		FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
-		FoliageBaker.BakeFoliage("Foliage/FoliageData"); 
+	//	FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
+		//FoliageBaker.BakeFoliage("Foliage/FoliageData"); 
 		FoliageRenderer.PrepareFoligeRenderer(Window); 
 
 	}
@@ -120,17 +120,19 @@ namespace Scape {
 			Sky.RenderSky(Window, Camera, World); 
 
 			glEnable(GL_DEPTH_TEST); 
-
-		/*	World.DeferredFBO.Bind(); 
+			
+			World.DeferredFBO.Bind(); 
 			World.RenderWorld(Camera, Sky.SkyCube); 
 			World.DeferredFBO.UnBind();
-			Direct.RenderDirectLighting(Window, Camera, World, Sky); 
-
+			World.DeferredFBOTerrain.Bind(); 
+			World.RenderWorldTerrain(Camera, Sky.SkyCube);
+			World.DeferredFBOTerrain.UnBind(); 
+			FoliageRenderer.RenderFoliage(Camera, Window, World, Sky.Orientation);
+			Direct.RenderDirectLighting(Window, Camera, FoliageRenderer, Sky); 
+			
 			
 
-			*/
-
-			FoliageRenderer.RenderFoliage(Camera, Window); 
+			
 
 			glFinish();
 

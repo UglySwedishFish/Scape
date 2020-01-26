@@ -35,6 +35,17 @@ void main() {
 
 	vec3 Current = vec3(1.0); 
 
+
+	bool HitTerrain = false; 
+
+	float TraversalToTerrain = -Origin.y / Direction.y; 
+
+	if(TraversalToTerrain > 0.0 && (TraversalToTerrain < HitUVWM.z || HitUVWM.z <= 0.0)) {
+		HitTerrain = true; 
+		HitUVWM.z = TraversalToTerrain; 
+		HitNormal.xyz = vec3(0.0,1.0,0.0); 
+	}
+
 	if(HitUVWM.z > 0.0) {
 
 
@@ -44,11 +55,18 @@ void main() {
 
 		vec4 MaterialData = texelFetch(MaterialData, ivec2(int(HitUVWM.w),0),0); 
 
-		vec3 Color = MaterialData.xyz; 
+		vec3 Color = vec3(0.0); 
 
-		if(MaterialData.x < -0.5) {
-			int Texture = int(MaterialData.y + .1); 
-			Color = pow(texture(Textures, vec3(HitUVWM.xy, Texture & 255)).xyz,vec3(2.2)); 
+		if(!HitTerrain) {
+			Color = MaterialData.xyz; 
+
+			if(MaterialData.x < -0.5) {
+				int Texture = int(MaterialData.y + .1); 
+				Color = pow(texture(Textures, vec3(HitUVWM.xy, Texture & 255)).xyz,vec3(2.2)); 
+			}
+		}
+		else {
+			Color = vec3(0.1,1.0,0.0); 
 		}
 
 		for(int GIImage = 0; GIImage < ShadowCount; GIImage++) {

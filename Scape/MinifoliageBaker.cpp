@@ -16,6 +16,7 @@ namespace Scape {
 
 		void FoliageBaker::BakeFoliage(const std::string& FileName)
 		{
+			WindTexture = LoadTextureGL("Foliage/Wind.jpg");
 			Shader FoliageBakerShader = Shader("Shaders/FoliageBaker"); 
 			FrameBufferObject FoliageOutPutBuffer = FrameBufferObject(Vector2i(FoliageResolution * FoliageDirections, FoliageResolution), GL_RGBA8, false); 
 		
@@ -44,14 +45,11 @@ namespace Scape {
 
 			glFinish();
 
-			float TimeAddon = 6.28318531 / 16.f; 
+			float TimeAddon = 1.0 / 256.f; 
 
 			unsigned char* Pixels = new unsigned char[FoliageDirections * FoliageResolution * FoliageResolution * 4];
 
-			for (int i = 0; i < 16; i++) {
-
-
-				
+			for (int i = 0; i < 256; i++) {
 
 
 				FoliageBakerShader.Bind();
@@ -64,10 +62,13 @@ namespace Scape {
 				FoliageBakerShader.SetUniform("MaxStepLength", MaxLenght);
 				FoliageBakerShader.SetUniform("Primitives", 0);
 				FoliageBakerShader.SetUniform("PrimitiveCount", static_cast<int>(Geometry.size()));
+				FoliageBakerShader.SetUniform("WindTexture", 1);
 				FoliageBakerShader.SetUniform("Time", TimeAddon * i);
 
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_1D, FoliageDataTexture);
+
+				WindTexture.Bind(1); 
 
 				DrawPostProcessQuad();
 

@@ -26,7 +26,7 @@ namespace Scape {
 			DirectShader.UnBind();
 		}
 
-		void DirectRenderer::RenderDirectLighting(Window& Window, Camera& Camera, WorldManager& World, SkyRendering& Sky)
+		void DirectRenderer::RenderDirectLighting(Window& Window, Camera& Camera, FoliageRenderer& World, SkyRendering& Sky)
 		{
 
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); 
@@ -49,10 +49,12 @@ namespace Scape {
 
 			}
 
-			World.DeferredFBO.BindImage(2, 3); 
-			World.DeferredFBO.BindImage(1, 4);
-			World.DeferredFBO.BindImage(0, 5);
-			World.DeferredFBO.BindImage(3, 6);
+			
+			
+			World.CombinedDeferred.BindImage(2, 3);
+			World.CombinedDeferred.BindImage(1, 4);
+			World.CombinedDeferred.BindImage(0, 5);
+			World.CombinedDeferred.BindImage(3, 6);
 
 			DrawPostProcessQuad(); 
 

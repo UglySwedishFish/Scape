@@ -11,7 +11,9 @@ namespace Scape {
 		{
 			Importer = std::make_unique<Assimp::Importer>(); 
 			DeferredFBO = MultiPassFrameBufferObject(Window.GetResolution(), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F }); 
+			DeferredFBOTerrain = MultiPassFrameBufferObject(Window.GetResolution(), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F });
 			EntityDeferredShader = Shader("Shaders/EntityDeferred"); 
+			TerrainDeferredShader = Shader("Shaders/TerrainDeferred"); 
 
 			EntityDeferredShader.Bind();
 
@@ -26,6 +28,15 @@ namespace Scape {
 			EntityDeferredShader.SetUniform("LightMapGI", 9);
 
 			EntityDeferredShader.UnBind();
+
+			TerrainDeferredShader.Bind(); 
+
+			
+			TerrainDeferredShader.SetUniform("LightMap", 7);
+			TerrainDeferredShader.SetUniform("Sky", 8);
+			TerrainDeferredShader.SetUniform("LightMapGI", 9);
+
+			TerrainDeferredShader.UnBind(); 
 
 			Generator.PrepareGenerator(); 
 
@@ -115,6 +126,32 @@ namespace Scape {
 			CurrentShader->UnBind();
 
 
+		}
+
+		void WorldManager::RenderWorldTerrain(Camera& Camera, CubeMultiPassFrameBufferObject& SkyCube, Shader* OverideShader)
+		{
+			Shader* CurrentShader = &TerrainDeferredShader;
+			if (OverideShader != nullptr) {
+				CurrentShader = OverideShader;
+			}
+
+			CurrentShader->Bind();
+			CurrentShader->SetUniform("IdentityMatrix", Camera.Project * Camera.View);
+			CurrentShader->SetUniform("TimeOfDay", SunDetail.w);
+			CurrentShader->SetUniform("SunColor", Vector3f(SunDetail));
+			CurrentShader->SetUniform("LightingZones", LIGHT_BAKING_LIGHTING_ZONES);
+
+			glActiveTexture(GL_TEXTURE8);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, SkyCube.Texture[1]);
+
+
+
+
+			for (int ChunkIdx = 0; ChunkIdx < ChunkIterator.size(); ChunkIdx++) {
+				ChunkIterator[ChunkIdx]->DrawChunkTerrain(*CurrentShader);
+			}
+
+			CurrentShader->UnBind();
 		}
 
 	}

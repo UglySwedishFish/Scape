@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SkyRenderer.h"
+#include "FoliageRenderer.h"
 
 
 namespace Scape {
@@ -13,7 +14,7 @@ namespace Scape {
 			Shader DirectShader; 
 
 			void PrepareDirectLighting(Window& Window); 
-			void RenderDirectLighting(Window& Window, Camera& Camera, WorldManager & World, SkyRendering & Sky); 
+			void RenderDirectLighting(Window& Window, Camera& Camera, FoliageRenderer & World, SkyRendering & Sky); 
 
 		};
 

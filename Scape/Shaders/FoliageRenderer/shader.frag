@@ -2,14 +2,37 @@
 
 in vec2 TexCoord; 
 in vec3 WorldPos; 
-layout(location = 0) out vec4 Lighting;
 
-uniform sampler3D RayData[16]; 
+
+layout(location = 0) out vec4 OutAlbedo;
+layout(location = 1) out vec4 OutNormal;
+layout(location = 2) out vec4 OutWorldPosition; 
+layout(location = 3) out vec3 OutLighting; 
+
+
+uniform sampler3D CurrentRayData; 
+uniform sampler2D Wind; 
+
+uniform sampler2D EntityDepth; 
+uniform sampler2D TerrainDepth; 
+
+
+uniform sampler2D EntityAlbedo; 
+uniform sampler2D EntityNormal; 
+uniform sampler2D EntityWorldPosition; 
+uniform sampler2D EntityLighting; 
+
+uniform sampler2D TerrainAlbedo; 
+uniform sampler2D TerrainNormal; 
+uniform sampler2D TerrainWorldPosition; 
+uniform sampler2D TerrainLighting; 
+
 uniform vec3 CameraPosition; 
+uniform vec3 LightDirection; 
 uniform float MaxLength; 
 uniform float Time; 
-uniform sampler2D Wind; 
 uniform bool RandTexCoord; 
+uniform mat4 IdentityMatrix; 
 
 
 const float pi = 3.141592;
@@ -51,31 +74,12 @@ vec3 GetTriangleInterpNode(in vec2 pos, in float freq, in int nodeIndex)
 
 vec3 GetGrassSample(vec3 Incident,vec2 IncidentXZ,float Angle, vec2 TextureCoordinate, vec3 WorldPos, float Time) {
 
-	int Frame1 = int(Time*12); 
-	int Frame2 = Frame1 + 1; 
 
-	Frame1 = Frame1 & 15; 
-	Frame2 = Frame2 & 15; 
-
-	vec4 Sample1 = texture(RayData[Frame1], vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
-	vec4 Sample2 = texture(RayData[Frame2], vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
-	
-	//figure out deviation 
-
+	vec4 Sample1 = texture(CurrentRayData, vec3(TextureCoordinate.x, Angle/6.28318531, TextureCoordinate.y)); 
 	
 	float Traversal1 = ((int(Sample1.z * 255) + int(Sample1.w * 255) * 255) / 65536.f) * MaxLength; 
-	float Traversal2 = ((int(Sample2.z * 255) + int(Sample2.w * 255) * 255) / 65536.f) * MaxLength; 
 
-	float Traversal; 
-	float TimeFract = fract(Time*12.0); 
-	Traversal = TimeFract > 1.0-clamp((abs(Traversal2-Traversal1)/min(Traversal1,Traversal2))*.1,0.0,1.0) ? Traversal2 : Traversal1; 
-
-
-
-	//construct 2D traversal 
-
-
-	return vec3(0.0,0.0,Traversal); 
+	return vec3(0.0,0.0,Traversal1); 
 	
 }
 
@@ -89,24 +93,19 @@ vec3 hash33( vec3 p )
 }
 
 
-
-void main() {
-	vec3 Incident = normalize(WorldPos - CameraPosition); 
-
-	//would require a TBN matrix actually 
-	vec2 IncidentXZ = normalize(Incident.xz); 
+//gives [normal,traversal] (traversal is -1 if there was no hit!) 
+vec4 Trace(vec3 Direction, vec3 WorldPosition, float MaxTraversal) { //todo : TBN matrix 
 	
-	float Angle = atan(IncidentXZ.x, IncidentXZ.y); 
+	vec2 DirectionXZ = normalize(Direction.xz); 
+	
+	float Angle = atan(DirectionXZ.x, DirectionXZ.y); 
 
-	Lighting.xyz = vec3(0.0); 
+	vec2 ATexCoord = WorldPosition.xz; 
 
-	vec3 Data = vec3(100000.0); 
+	vec3 Data = vec3(1000000.); 
 
-	vec2 ATexCoord = TexCoord; 
-
-	vec2 Wind = texture(Wind, TexCoord * 3.0).xz * 2. - 1.; 
 	for(int i = 0; i < 3; i++) {
-		vec3 interpNode = GetTriangleInterpNode(ATexCoord, 20.0, i);
+		vec3 interpNode = GetTriangleInterpNode(ATexCoord, 15.0, i);
 
 		//THATS WHEN ITS BACK TO THE LAB AGAIN 
 
@@ -118,25 +117,108 @@ void main() {
 
 		vec2 NewCoord = ATexCoord * rotation; 
 
-		NewCoord += Wind * cos(Time) * 0.003; 
-
 		float NewAngle = fract((Angle + ang) / 6.28318531) * 6.28318531; 
 
 
-		vec3 Sample = GetGrassSample(Incident, IncidentXZ, NewAngle, 32.0 * NewCoord, WorldPos,Time); 
+		vec3 Sample = GetGrassSample(Direction, DirectionXZ, NewAngle, 16.0 * NewCoord, WorldPos,Time); 
 
 		Data.z = min(Data.z,Sample.z); 
 	}
 
-	float Traversal3D = Data.z / (1.0-abs(Incident.y)); 
+	Data.z /= 16.0; 
+
+	float Traversal3D = Data.z / sqrt(1.0-clamp(abs(Direction.y)*abs(Direction.y),0.0,1.0)); 
+
+	if(Traversal3D >= MaxTraversal) {
+		return vec4(0.0,0.0,0.0,-1.0); 
+	}
+
+	return vec4(0.,0.0, 0.0,Traversal3D); 
+
+}
+
+
+
+
+void main() {
+
 	
-	float MaxTraversal = 1.0f / abs(Incident.y);
+	float TerrainRawDepthSample = texture(TerrainDepth, TexCoord).x; 
+	float EntityDepthSample = texture(EntityDepth, TexCoord).x; 
+
+	if(EntityDepthSample < TerrainRawDepthSample) {
+		
+		OutAlbedo = texture(EntityAlbedo, TexCoord); 
+		OutNormal = texture(EntityNormal, TexCoord); 
+		OutWorldPosition = texture(EntityWorldPosition, TexCoord); 
+		OutLighting = texture(EntityLighting, TexCoord).xyz; 
+		//early exit! 
+		return; 
+	}
+
+	vec4 RawTerrainWorldPosition = texture(TerrainWorldPosition, TexCoord); 
+
+
+	OutAlbedo = texture(TerrainAlbedo, TexCoord); 
+	OutNormal = texture(TerrainNormal, TexCoord); 
+	OutWorldPosition = texture(TerrainWorldPosition, TexCoord); 
+	OutLighting = texture(TerrainLighting, TexCoord).xyz; 
+
+
+	vec3 Incident = normalize(RawTerrainWorldPosition.xyz - CameraPosition); 
+
+	//would require a TBN matrix actually 
+	vec2 IncidentXZ = normalize(Incident.xz); 
 	
-	Lighting.xyz = (vec3(WorldPos.x, WorldPos.y + 1.2, WorldPos.z) + vec3(Incident.x,Incident.y,Incident.z) * min(Traversal3D,MaxTraversal)) / 1.0f; 
-	Lighting.x = 0.25; 
-	Lighting.z = 0.0; 
+	float Angle = atan(IncidentXZ.x, IncidentXZ.y); 
+
+	vec3 Data = vec3(100000.0); 
+
+	float MaxTraversal = .15 / abs(Incident.y);
+
+
+	Data.z = Trace(Incident, RawTerrainWorldPosition.xyz, MaxTraversal).w; 
 	
-	Lighting.xyz = mix(Lighting.xyz, vec3(0.35,0.0,0.0),0.25); 
+	if(Data.z < 0.0 || Data.z > MaxTraversal) {
+		
+		return; 
+
+	}
+
+	float MaxAbs = max(abs(Incident.x), abs(Incident.z)); 
+
+	float Traversal3D = Data.z; 
+	
+
+	vec3 Origin = RawTerrainWorldPosition.xyz; 
+
+	vec3 newWorldPos = Origin + Incident * Data.z; 
+
+
+	float TraversalPlane = abs(newWorldPos.y); 
+
+	float NewMaxTraversal = (TraversalPlane) / abs(LightDirection.y); 
+
+
+	//vec4 ShadowTrace = Trace(LightDirection, newWorldPos, NewMaxTraversal); 
+
+	OutAlbedo.xyz = pow(clamp(MaxTraversal-abs(Incident.y) * Data.z,0.0,MaxTraversal)/MaxTraversal,2.0) * vec3(0.1,1.0,0.0); 
+	OutWorldPosition.xyz = newWorldPos; 
+
+	vec4 NewClipSpace = IdentityMatrix * vec4(OutWorldPosition.xyz, 1.0); 
+	NewClipSpace.xyz /= NewClipSpace.w; 
+	NewClipSpace.z = NewClipSpace.z * 0.5 + 0.5; 
+
+	if(EntityDepthSample < NewClipSpace.z) {
+		
+		OutAlbedo = texture(EntityAlbedo, TexCoord); 
+		OutNormal = texture(EntityNormal, TexCoord); 
+		OutWorldPosition = texture(EntityWorldPosition, TexCoord); 
+		OutLighting = texture(EntityLighting, TexCoord).xyz; 
+		//early exit! 
+		return; 
+	}
+
 
 
 }

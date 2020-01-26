@@ -11,6 +11,7 @@ uniform float MinStepSize;
 uniform float MaxStepLength; 
 uniform float Time; 
 uniform sampler1D Primitives; 
+uniform sampler2D WindTexture; 
 uniform int PrimitiveCount; 
 
 
@@ -45,9 +46,9 @@ float SignedDistanceUnitCircle(vec2 p, float r) {
 	return length(p) - r; 
 }
 
-bool HandleCircle(inout float MinDistance, inout vec3 NormalHit, float TraversalDistance, Primitive Data, vec2 Position) {
+bool HandleCircle(inout float MinDistance, inout vec3 NormalHit, float TraversalDistance, Primitive Data, vec2 Position, mat2 WindRotation, float WindIntensity) {
 	
-	vec2 ActualP = (fract(Position + Data.Shift * cos(Time) * cos(TraversalDistance*4.0))-Data.Position) / Data.Size ; 
+	vec2 ActualP = (fract(Position + Data.Shift * WindRotation * WindIntensity * cos(TraversalDistance*4.0))-Data.Position) / Data.Size ; 
 
 	float Dist = SignedDistanceUnitCircle(ActualP, clamp(TraversalDistance,0.01,1.0)); 
 
@@ -84,8 +85,22 @@ void main() {
 
 	Data = vec4(0.0,0.0,1.0,1.0); 
 
+	
+
+
+
 	for(float Traversal = 0.0; Traversal < MaxStepLength;) {
 	
+		vec3 RawWindSample = texture(WindTexture, CurrentLocation * 0.05 + vec2(1.0,1.0)*Time).xyz; 
+
+		vec2 WindDirectionXZ = normalize(RawWindSample.xz * 2. - 1.); 
+
+		float WindAngle = atan(WindDirectionXZ.x, WindDirectionXZ.y);
+
+		mat2 rotation = mat2(cos(WindAngle), sin(WindAngle), -sin(WindAngle), cos(WindAngle));
+
+		float WindIntensity = RawWindSample.y; 
+
 		float MinDistance = MinStepSize; 
 
 		for(int PrimitiveIndex = 0; PrimitiveIndex < PrimitiveCount; PrimitiveIndex++) {
@@ -94,7 +109,7 @@ void main() {
 
 			switch(CurrentPrimitive.Type) {
 				case 0: 
-					if(HandleCircle(MinDistance, NormalHit, Traversal, CurrentPrimitive, CurrentLocation)) {
+					if(HandleCircle(MinDistance, NormalHit, Traversal, CurrentPrimitive, CurrentLocation,rotation, WindIntensity)) {
 						
 						int TraversalDistanceInt = int((Traversal / MaxStepLength)*65536); 
 
