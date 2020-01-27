@@ -34,6 +34,7 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Entirely dynamic weather system with rain and snow (with procedural coverage for both of these)**
 * **Area, IES, Point and Spot light sources** 
 * **Very realistic ocean rendering with physically accurate water volume** 
+* **(Possibly) look into implementing dithering to get richer color depth**
 * **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat!**
 
 # More media:
