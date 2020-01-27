@@ -27,7 +27,6 @@ namespace Scape {
 			std::make_tuple("Sphere.obj", "Sphere.obj")
 		}; 
 
-
 		struct Generator {
 
 			//handles generation of ALL models (from trees to larger grass and everything inbetween) 

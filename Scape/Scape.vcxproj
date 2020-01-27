@@ -139,6 +139,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunks.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="CubeMapHandler.cpp" />
     <ClCompile Include="Direct.cpp" />
     <ClCompile Include="FoliageRenderer.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
@@ -166,12 +167,14 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Chunks.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="CubeMapHandler.h" />
     <ClInclude Include="DependenciesMath.h" />
     <ClInclude Include="Direct.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FoliageRenderer.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Generator.h" />
+    <ClInclude Include="IndirectLighting.h" />
     <ClInclude Include="Intersecter.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="LightBakerManager.h" />
@@ -203,6 +206,8 @@
     <None Include="Shaders\Generator\shader.vert" />
     <None Include="Shaders\HitHandler\shader.frag" />
     <None Include="Shaders\HitHandler\shader.vert" />
+    <None Include="Shaders\Indirect\shader.frag" />
+    <None Include="Shaders\Indirect\shader.vert" />
     <None Include="Shaders\RayGenerator\shader.frag" />
     <None Include="Shaders\RayGenerator\shader.vert" />
     <None Include="Shaders\SkyCubeShader\shader.frag" />

@@ -58,6 +58,9 @@
     <Filter Include="Shaders\TAA">
       <UniqueIdentifier>{c3ed2920-7af8-423d-af0d-9598d20fbf6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Indirect">
+      <UniqueIdentifier>{9e469c9e-dc5d-4bb1-b077-0009192bccd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -130,6 +133,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TemporalAntiAliasing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMapHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -210,6 +216,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TemporalAntiAliasing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IndirectLighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMapHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -294,6 +306,12 @@
     </None>
     <None Include="Shaders\TAA\shader.frag">
       <Filter>Shaders\TAA</Filter>
+    </None>
+    <None Include="Shaders\Indirect\shader.frag">
+      <Filter>Shaders\Indirect</Filter>
+    </None>
+    <None Include="Shaders\Indirect\shader.vert">
+      <Filter>Shaders\Indirect</Filter>
     </None>
   </ItemGroup>
 </Project>
