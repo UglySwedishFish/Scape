@@ -13,8 +13,9 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Atmospheric sky rendering** 
 * **Basic direct lighting + global illumination for direct lighting (1 bounce)**
 * **Constant time grass rendering using 2d lightfields**
+* **TAA (basic right now)**
 
-# What are the future plans? 
+# What are the future plans? (in no real particular order)
 
 * **Implemented support for physically-correct directional lighting (with contact hardening)** 
 * **Implement meshing for terrain, as well as approximation for terrain tracing for the path-tracer** 
@@ -33,7 +34,6 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Entirely dynamic weather system with rain and snow (with procedural coverage for both of these)**
 * **Area, IES, Point and Spot light sources** 
 * **Very realistic ocean rendering with physically accurate water volume** 
-* **TAA** 
 * **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat!**
 
 # More media:
