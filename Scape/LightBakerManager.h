@@ -73,6 +73,8 @@ namespace Scape {
 			
 
 			Vector3f PrevCameraPosition; 
+
+			TextureGL DirtTexture, GrassBladeTexture, GrassSurfaceTexture; 
 			
 			
 

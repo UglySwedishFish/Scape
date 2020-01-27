@@ -24,6 +24,7 @@ namespace Scape {
 
 		void Chunk::Generate(Generator& Generator, LightBaker& Baker, Camera& Camera)
 		{
+			DirtTexture = LoadTextureGL("Textures/Dirt.jpg"); 
 			Entities = Generator.GetGeneratedModels(PosX, PosZ); 
 			GenerateChunkMesh(Generator); 
 			Baker.AddToLightBakingQueue(*this, Camera);
@@ -71,6 +72,8 @@ namespace Scape {
 
 			glActiveTexture(GL_TEXTURE9);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, LightBakingImageGI);
+
+			DirtTexture.Bind(6); 
 
 			glBindVertexArray(TerrainVAO);
 
@@ -189,9 +192,9 @@ namespace Scape {
 
 						unsigned char SubIndex = TriangleIndicies[Index]; 
 
-						Vector2f UV = Vector2f(QuadVertices[SubIndex].x, QuadVertices[SubIndex].z);
+						Vector2f UV = Vector2f(QuadVertices[SubIndex].x, QuadVertices[SubIndex].z) + Vector2f(BlockX, BlockY);
 						Vector3f Vertice = Vector3f(QuadVertices[SubIndex]) + Vector3f(BlockX, 0.0, BlockY);
-						Vector2f LightMapUV = (UV + Vector2f(BlockX, BlockY)) / Vector2f(CHUNK_SIZE); 
+						Vector2f LightMapUV = UV / Vector2f(CHUNK_SIZE); 
 
 						Normals.push_back(Normal); 
 						Tangents.push_back(Tangent); 

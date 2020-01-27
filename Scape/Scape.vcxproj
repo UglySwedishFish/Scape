@@ -154,6 +154,7 @@
     <ClCompile Include="Pipeline.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SkyRenderer.cpp" />
+    <ClCompile Include="TemporalAntiAliasing.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WorldManager.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shaders\Generator\NoiseGenerator.h" />
     <ClInclude Include="SkyRenderer.h" />
+    <ClInclude Include="TemporalAntiAliasing.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WorldManager.h" />
@@ -207,8 +209,12 @@
     <None Include="Shaders\SkyCubeShader\shader.vert" />
     <None Include="Shaders\SkyIncidentShader\shader.frag" />
     <None Include="Shaders\SkyIncidentShader\shader.vert" />
+    <None Include="Shaders\TAA\shader.frag" />
+    <None Include="Shaders\TAA\shader.vert" />
     <None Include="Shaders\TerrainDeferred\shader.frag" />
     <None Include="Shaders\TerrainDeferred\shader.vert" />
+    <None Include="Shaders\TerrainShadowDeferred\shader.frag" />
+    <None Include="Shaders\TerrainShadowDeferred\shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

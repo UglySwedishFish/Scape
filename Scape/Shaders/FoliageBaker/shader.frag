@@ -52,8 +52,14 @@ bool HandleCircle(inout float MinDistance, inout vec3 NormalHit, float Traversal
 
 	float Dist = SignedDistanceUnitCircle(ActualP, clamp(TraversalDistance,0.01,1.0)); 
 
+
+
 	if(Dist <= 0.0) {
-		NormalHit = vec3(1.0,0.0,0.0);
+
+		vec2 Normal = (fract(Position + Data.Shift * WindRotation * WindIntensity * cos(TraversalDistance*4.0))-Data.Position); 
+		Normal = normalize(Normal); 
+
+		NormalHit = vec3(Normal.x,0.0,Normal.y);
 		return true; 
 	}
 
@@ -87,7 +93,7 @@ void main() {
 
 	
 
-
+	bool First = true; 
 
 	for(float Traversal = 0.0; Traversal < MaxStepLength;) {
 	
@@ -103,6 +109,8 @@ void main() {
 
 		float MinDistance = MinStepSize; 
 
+
+
 		for(int PrimitiveIndex = 0; PrimitiveIndex < PrimitiveCount; PrimitiveIndex++) {
 
 			Primitive CurrentPrimitive = GetPrimitiveData(PrimitiveIndex); 
@@ -113,8 +121,17 @@ void main() {
 						
 						int TraversalDistanceInt = int((Traversal / MaxStepLength)*65536); 
 
-						Data.x = 0.0; 
-						Data.y = 0.0; 
+
+						vec3 BaseNormal = NormalHit;
+
+						//BaseNormal = normalize(mix(vec3(0.0,1.0,0.0), BaseNormal, clamp(Traversal * 4.0, 0.0, 1.0))); 
+						
+						if(First) {
+							BaseNormal = vec3(0.0,1.0,0.0); 
+						}
+					
+						Data.x = BaseNormal.x * 0.5 + 0.5; 
+						Data.y = BaseNormal.z * 0.5 + 0.5; 
 						Data.z = (TraversalDistanceInt & 255) / 255.f; 
 						Data.w = (TraversalDistanceInt / 256) / 255.f; 
 
@@ -127,7 +144,7 @@ void main() {
 				
 		}
 
-
+		First = false; 
 		Traversal += MinDistance; 
 		CurrentLocation += RayDirection * MinDistance; 
 

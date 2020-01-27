@@ -22,7 +22,7 @@ namespace Scape {
 			LightBakingQuality::MEDIUM
 		}; 
 		const std::array<std::tuple<std::string, std::string>, static_cast<int>(Objects::Size)> ObjectLocations = {
-			std::make_tuple("Monkey.obj","Monkey.obj"),
+			std::make_tuple("RedMonkey.obj","RedMonkey.obj"),
 			std::make_tuple("Plane.obj", "Plane.obj"),
 			std::make_tuple("Sphere.obj", "Sphere.obj")
 		}; 

@@ -21,6 +21,10 @@ uniform mat4 ShadowMatrices[16];
 uniform int ShadowCount; 
 uniform vec3 LightDirection[16]; 
 
+uniform sampler2D GrassBladeTexture; 
+uniform sampler2D GrassSurfaceTexture; 
+uniform sampler2D DirtTexture; 
+
 void main() {
 	
 
@@ -66,7 +70,9 @@ void main() {
 			}
 		}
 		else {
-			Color = vec3(0.1,1.0,0.0); 
+			vec3 GrassTex = min(pow(texture(GrassBladeTexture, vec2(0.5)).xyz,vec3(2.2)) * 2.0 * pow(texture(GrassSurfaceTexture, HitLocation.xz * .5).xyz, vec3(2.2)),vec3(1.0)); 
+			vec3 DirtTex = texture(DirtTexture, HitLocation.xz * 2.0).xyz; 
+			Color = mix(GrassTex, DirtTex, pow(abs(Direction.y),3.0)); //approximation, now 100% accurate (but not bad either)
 		}
 
 		for(int GIImage = 0; GIImage < ShadowCount; GIImage++) {

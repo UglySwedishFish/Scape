@@ -22,6 +22,8 @@ namespace Scape {
 			DirectShader.SetUniform("Normal", 4);
 			DirectShader.SetUniform("Albedo", 5);
 			DirectShader.SetUniform("LightMap", 6);
+			DirectShader.SetUniform("GrassDirect", 7);
+			DirectShader.SetUniform("SkyIncident", 8);
 
 			DirectShader.UnBind();
 		}
@@ -29,10 +31,7 @@ namespace Scape {
 		void DirectRenderer::RenderDirectLighting(Window& Window, Camera& Camera, FoliageRenderer& World, SkyRendering& Sky)
 		{
 
-			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT); 
-
-
-			//DirectLighting.Bind(); 
+			DirectLighting.Bind(); 
 
 			DirectShader.Bind();
 			
@@ -55,12 +54,14 @@ namespace Scape {
 			World.CombinedDeferred.BindImage(1, 4);
 			World.CombinedDeferred.BindImage(0, 5);
 			World.CombinedDeferred.BindImage(3, 6);
+			World.CombinedDeferred.BindImage(4, 7);
+			Sky.SkyIncident.BindImage(8); 
 
 			DrawPostProcessQuad(); 
 
 			DirectShader.UnBind();
 
-		//	DirectLighting.UnBind(); 
+			DirectLighting.UnBind(); 
 			
 
 

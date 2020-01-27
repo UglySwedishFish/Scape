@@ -52,6 +52,12 @@
     <Filter Include="Shaders\TerrainDeferred">
       <UniqueIdentifier>{15b94e0c-e842-4d5c-ab23-635430530fec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\TerrainShadowDeferred">
+      <UniqueIdentifier>{8693393b-68d3-4fad-9fa3-adfef1304172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\TAA">
+      <UniqueIdentifier>{c3ed2920-7af8-423d-af0d-9598d20fbf6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -121,6 +127,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FoliageRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TemporalAntiAliasing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,6 +209,9 @@
     <ClInclude Include="FoliageRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TemporalAntiAliasing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Generator\shader.frag">
@@ -270,6 +282,18 @@
     </None>
     <None Include="Shaders\TerrainDeferred\shader.vert">
       <Filter>Shaders\TerrainDeferred</Filter>
+    </None>
+    <None Include="Shaders\TerrainShadowDeferred\shader.frag">
+      <Filter>Shaders\TerrainShadowDeferred</Filter>
+    </None>
+    <None Include="Shaders\TerrainShadowDeferred\shader.vert">
+      <Filter>Shaders\TerrainShadowDeferred</Filter>
+    </None>
+    <None Include="Shaders\TAA\shader.vert">
+      <Filter>Shaders\TAA</Filter>
+    </None>
+    <None Include="Shaders\TAA\shader.frag">
+      <Filter>Shaders\TAA</Filter>
     </None>
   </ItemGroup>
 </Project>

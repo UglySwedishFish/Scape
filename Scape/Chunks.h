@@ -19,6 +19,7 @@ namespace Scape {
 		struct Chunk {
 
 			friend struct LightBaker; 
+			TextureGL DirtTexture; 
 
 			//each chunk is a model manager -> why? cuz fuck u, thats why (also means frustum culling becomes super easy -> still only a few draw calls per chunk) 
 

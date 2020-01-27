@@ -8,7 +8,7 @@
 #include "Camera.h"
 #include "MinifoliageBaker.h"
 #include "Texture.h"
-#include "WorldManager.h"
+#include "SkyRenderer.h"
 
 namespace Scape {
 
@@ -16,14 +16,20 @@ namespace Scape {
 
 		struct FoliageRenderer {
 
-			Shader FoliageRenderer; 
+			Matrix4f FoliageShadowView; 
+			Matrix4f FoliageShadowProject; 
+
+			Shader FoliageRenderer, TerrainShadowDeferred; 
 			TextureGL3D RayData[256]; 
 			TextureGL WindTexture; 
+			TextureGL GrassTexture, GrassSurfaceTexture;
 
-			MultiPassFrameBufferObject CombinedDeferred; 
+			MultiPassFrameBufferObjectPreviousData CombinedDeferred; 
+			FrameBufferObject FoliageShadowMap; 
 
 			void PrepareFoligeRenderer(Window & Window); 
-			void RenderFoliage(Camera& Camera, Window& Window,WorldManager & World, Vector3f SunDirection); 
+			void RenderFoliage(Camera& Camera, Window& Window, WorldManager& World, SkyRendering& Sky); 
+			void RenderFoliageShadowMap(Camera& Camera, Window& Window, WorldManager& World, SkyRendering& Sky); 
 			void ReloadFoliage(); 
 
 		};

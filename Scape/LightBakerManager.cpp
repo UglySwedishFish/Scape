@@ -71,6 +71,10 @@ namespace Scape {
 				LightMapShadeHandler.SetUniform(Title, 10 + ShadowMap); 
 			}
 
+			LightMapShadeHandler.SetUniform("GrassBladeTexture", 27);
+			LightMapShadeHandler.SetUniform("GrassSurfaceTexture", 28);
+			LightMapShadeHandler.SetUniform("DirtTexture", 29);
+
 			
 			LightMapShadeHandler.UnBind(); 
 
@@ -128,6 +132,9 @@ namespace Scape {
 				Sky.GetTimeOfDayDirection(TimeMax * (Zone + 1), ShadowMapRotations[Zone], ShadowMapOrientations[Zone]); 
 			}
 
+			DirtTexture = LoadTextureGL("Textures/Dirt.jpg"); 
+			GrassBladeTexture = LoadTextureGL("Textures/Grass Blade.png");
+			GrassSurfaceTexture = LoadTextureGL("Textures/Grass Surface.jpg");
 
 		}
 
@@ -593,13 +600,15 @@ namespace Scape {
 			glActiveTexture(GL_TEXTURE7);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, GetCombinedTextures()[0]);
 
-			
 
-			
 
 
 			for (int i = 0; i < LIGHT_BAKING_LIGHTING_ZONES - 2; i++)
 				ShadowMaps[i].BindDepthImage(i + 10); 
+
+			GrassBladeTexture.Bind(27); 
+			GrassSurfaceTexture.Bind(28); 
+			DirtTexture.Bind(29); 
 
 			DrawPostProcessQuad(); 
 

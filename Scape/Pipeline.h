@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Direct.h"
 #include "Camera.h"
-#include "FoliageRenderer.h"
+#include "TemporalAntiAliasing.h"
 namespace Scape {
 
 	using namespace Rendering; 
@@ -13,6 +12,7 @@ namespace Scape {
 		SkyRendering Sky; 
 		DirectRenderer Direct; 
 		FoliageRenderer FoliageRenderer; 
+		TemporalAntiAliasing TAA; 
 
 
 		void PreparePipeline(Camera& Camera, Window& Window);

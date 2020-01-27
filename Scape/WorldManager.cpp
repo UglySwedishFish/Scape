@@ -31,7 +31,7 @@ namespace Scape {
 
 			TerrainDeferredShader.Bind(); 
 
-			
+			TerrainDeferredShader.SetUniform("DirtTexture", 6);
 			TerrainDeferredShader.SetUniform("LightMap", 7);
 			TerrainDeferredShader.SetUniform("Sky", 8);
 			TerrainDeferredShader.SetUniform("LightMapGI", 9);

@@ -17,6 +17,7 @@ namespace Scape {
 		World.PrepareWorldManager(Window);
 		Sky.PrepareSkyRenderer(Window); 
 		Direct.PrepareDirectLighting(Window); 
+		TAA.PrepareTemporalAntiAliasing(Window); 
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
@@ -31,14 +32,13 @@ namespace Scape {
 
 			FoliageBaker.AddFoliageGeometry(FoliageGeometry(FoliageGeometryType::CIRCLE, Vector2f(0.1), 0.0, Position, 0.2f * Vector2f(cos(Angle), sin(Angle))));
 
-
-
 		}
-
-		
-	//	FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
-		//FoliageBaker.BakeFoliage("Foliage/FoliageData"); 
+		/*
+		FoliageBaker.SaveFoliageGeometrySetup("Foliage/FoliageGeometry.txt"); 
+		FoliageBaker.BakeFoliage("Foliage/FoliageData"); 
+		return; */
 		FoliageRenderer.PrepareFoligeRenderer(Window); 
+
 
 	}
 
@@ -111,11 +111,12 @@ namespace Scape {
 
 
 			Camera.HandleInput(Window, sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) ? 10.f : 1.0f, 0.15f, true, sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle));
+			//Camera.Position.y = glm::max(1.8f, Camera.Position.y);
 
 			Camera.PrevView = Camera.View;
 			Camera.View = Core::ViewMatrix(Camera.Position, Camera.Rotation);
 			Camera.PrevProject = Camera.Project;
-			Camera.Project = Camera.RawProject;
+			Camera.Project = Core::TAAJitterMatrix(Window.GetFrameCount(), Window.GetResolution()) * Camera.RawProject;
 
 			Sky.RenderSky(Window, Camera, World); 
 
@@ -127,13 +128,10 @@ namespace Scape {
 			World.DeferredFBOTerrain.Bind(); 
 			World.RenderWorldTerrain(Camera, Sky.SkyCube);
 			World.DeferredFBOTerrain.UnBind(); 
-			FoliageRenderer.RenderFoliage(Camera, Window, World, Sky.Orientation);
+			FoliageRenderer.RenderFoliage(Camera, Window, World, Sky);
 			Direct.RenderDirectLighting(Window, Camera, FoliageRenderer, Sky); 
+			TAA.DoTemporalAntiAliasing(Window, Camera, Direct, FoliageRenderer); 
 			
-			
-
-			
-
 			glFinish();
 
 

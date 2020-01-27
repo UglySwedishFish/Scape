@@ -15,7 +15,7 @@ in vec2 LightMapTC;
 uniform sampler2D LightMap; 
 uniform samplerCube Sky; 
 uniform sampler2DArray LightMapGI; 
-
+uniform sampler2D DirtTexture; 
 
 uniform bool HasAlbedo; 
 uniform bool HasNormal; 
@@ -36,7 +36,7 @@ uniform int LightingZones;
 void main() {
 
 
-	OutAlbedo.xyz = vec3(1.0); 
+	OutAlbedo.xyz = pow(texture(DirtTexture, TexCoord * 2.0).xyz,vec3(2.2)); 
 	OutNormal.xyz = Normal; 
 	WorldPosition.xyz = Position; 
 

@@ -8,10 +8,12 @@ layout(location = 0) out vec4 OutAlbedo;
 layout(location = 1) out vec4 OutNormal;
 layout(location = 2) out vec4 OutWorldPosition; 
 layout(location = 3) out vec3 OutLighting; 
-
+layout(location = 4) out vec4 GrassDirectData; 
 
 uniform sampler3D CurrentRayData; 
 uniform sampler2D Wind; 
+uniform sampler2D GrassTexture; 
+uniform sampler2D GrassSurfaceTexture; 
 
 uniform sampler2D EntityDepth; 
 uniform sampler2D TerrainDepth; 
@@ -79,7 +81,7 @@ vec3 GetGrassSample(vec3 Incident,vec2 IncidentXZ,float Angle, vec2 TextureCoord
 	
 	float Traversal1 = ((int(Sample1.z * 255) + int(Sample1.w * 255) * 255) / 65536.f) * MaxLength; 
 
-	return vec3(0.0,0.0,Traversal1); 
+	return vec3(Sample1.xy,Traversal1); 
 	
 }
 
@@ -92,6 +94,11 @@ vec3 hash33( vec3 p )
 	return fract(sin(p)*43758.5453123);
 }
 
+float seed; 
+
+vec2 hash2() {
+    return fract(sin(vec2(seed+=0.1,seed+=0.1))*vec2(43758.5453123,22578.1459123));
+}
 
 //gives [normal,traversal] (traversal is -1 if there was no hit!) 
 vec4 Trace(vec3 Direction, vec3 WorldPosition, float MaxTraversal) { //todo : TBN matrix 
@@ -104,8 +111,10 @@ vec4 Trace(vec3 Direction, vec3 WorldPosition, float MaxTraversal) { //todo : TB
 
 	vec3 Data = vec3(1000000.); 
 
+	vec2 NormalData = vec2(0.0); 
+
 	for(int i = 0; i < 3; i++) {
-		vec3 interpNode = GetTriangleInterpNode(ATexCoord, 15.0, i);
+		vec3 interpNode = GetTriangleInterpNode(ATexCoord, 20.0, i);
 
 		//THATS WHEN ITS BACK TO THE LAB AGAIN 
 
@@ -120,33 +129,93 @@ vec4 Trace(vec3 Direction, vec3 WorldPosition, float MaxTraversal) { //todo : TB
 		float NewAngle = fract((Angle + ang) / 6.28318531) * 6.28318531; 
 
 
-		vec3 Sample = GetGrassSample(Direction, DirectionXZ, NewAngle, 16.0 * NewCoord, WorldPos,Time); 
+		vec3 Sample = GetGrassSample(Direction, DirectionXZ, NewAngle, 24.0 * NewCoord, WorldPos,Time); 
 
-		Data.z = min(Data.z,Sample.z); 
+		if(Data.z > Sample.z) {
+			Data.z = Sample.z; 
+			NormalData = (Sample.xy * 2. - 1.) * rotation; 
+		}
 	}
 
-	Data.z /= 16.0; 
+	Data.z /= 24.0; 
 
-	float Traversal3D = Data.z / sqrt(1.0-clamp(abs(Direction.y)*abs(Direction.y),0.0,1.0)); 
+	float Traversal3D = Data.z / sqrt(1.0-clamp(Direction.y*Direction.y,0.0,1.0)); 
 
 	if(Traversal3D >= MaxTraversal) {
 		return vec4(0.0,0.0,0.0,-1.0); 
 	}
 
-	return vec4(0.,0.0, 0.0,Traversal3D); 
+	return vec4(NormalData, Data.z,Traversal3D); 
 
 }
 
 
+vec4 DoShadowTrace(float TraversalPlane, vec3 Direction, vec3 HitLocation) {
+	
+	float TraversalToTop = -TraversalPlane / Direction.y; 
+
+	vec3 ShadowOrigin = HitLocation + Direction * TraversalToTop; 
+
+	return Trace(-Direction, ShadowOrigin, TraversalToTop); 
+
+}
+
+vec3 TransformToWorld(float x, float y, float z, vec3 normal) {
+    // Find an axis that is not parallel to normal
+    vec3 majorAxis;
+    if (abs(normal.x) < 0.57735026919f /* 1 / sqrt(3) */) {
+        majorAxis = vec3(1, 0, 0);
+    } else if (abs(normal.y) < 0.57735026919f /* 1 / sqrt(3) */) {
+        majorAxis = vec3(0, 1, 0);
+    } else {
+        majorAxis = vec3(0, 0, 1);
+    }
+
+    // Use majorAxis to create a coordinate system relative to world space
+    vec3 u = normalize(cross(normal, majorAxis));
+    vec3 v = cross(normal, u);
+    vec3 w = normal;
+
+
+    // Transform from local coordinates to world coordinates
+    return u * x +
+           v * y +
+           w * z;
+}
+
+vec3 LambertBRDF(vec3 Normal, vec2 Hash) {
+
+
+
+    float r = sqrt(Hash.x); 
+
+    float theta = Hash.y * 6.2831;
+
+    float x = r * cos(theta);
+    float y = r * sin(theta);
+
+    // Project z up to the unit hemisphere
+    float z = sqrt(1.0f - x * x - y * y);
+
+    return normalize(TransformToWorld(x, y, z, Normal));
+
+}
 
 
 void main() {
 
+	seed = ((TexCoord.x * TexCoord.y)*1000.0); 
+
+
+	GrassDirectData.w = 1.0;
 	
 	float TerrainRawDepthSample = texture(TerrainDepth, TexCoord).x; 
 	float EntityDepthSample = texture(EntityDepth, TexCoord).x; 
 
-	if(EntityDepthSample < TerrainRawDepthSample) {
+	OutNormal = texture(TerrainNormal, TexCoord); 
+	float L = length(OutNormal); 
+
+	if(EntityDepthSample < TerrainRawDepthSample || L < 0.5 || L > 1.5) {
 		
 		OutAlbedo = texture(EntityAlbedo, TexCoord); 
 		OutNormal = texture(EntityNormal, TexCoord); 
@@ -160,7 +229,7 @@ void main() {
 
 
 	OutAlbedo = texture(TerrainAlbedo, TexCoord); 
-	OutNormal = texture(TerrainNormal, TexCoord); 
+	
 	OutWorldPosition = texture(TerrainWorldPosition, TexCoord); 
 	OutLighting = texture(TerrainLighting, TexCoord).xyz; 
 
@@ -174,16 +243,20 @@ void main() {
 
 	vec3 Data = vec3(100000.0); 
 
-	float MaxTraversal = .15 / abs(Incident.y);
+	float MaxTraversal = .03 / abs(Incident.y);
 
+	vec4 RawTraceData = Trace(Incident, RawTerrainWorldPosition.xyz, MaxTraversal); 
 
-	Data.z = Trace(Incident, RawTerrainWorldPosition.xyz, MaxTraversal).w; 
+	Data.z = RawTraceData.w; 
 	
+	bool Hit = Data.z >= 0.0; 
+
 	if(Data.z < 0.0 || Data.z > MaxTraversal) {
 		
-		return; 
+		Data.z = MaxTraversal; 
 
 	}
+	//Data.z = MaxTraversal; 
 
 	float MaxAbs = max(abs(Incident.x), abs(Incident.z)); 
 
@@ -195,14 +268,32 @@ void main() {
 	vec3 newWorldPos = Origin + Incident * Data.z; 
 
 
-	float TraversalPlane = abs(newWorldPos.y); 
+	float TraversalPlane = abs(Incident.y * Data.z); 
 
-	float NewMaxTraversal = (TraversalPlane) / abs(LightDirection.y); 
+	
+	if(Hit) {
+		float CoordinateHeight = clamp(MaxTraversal-abs(Incident.y) * Data.z,0.0,MaxTraversal)/MaxTraversal; 
+		
+		//figure out what the y component of the normal should be 
 
+		//we know that NormalX^2 + NormalY^2 + NormalZ^2 = 1
+		//so if do some basic math -> NormalY^2 = 1 - NormalX^2 - NormalY^2 
+		//NormalY = sqrt(1.0 - NormalX*NormalX - NormalY*NormalY) 
 
-	//vec4 ShadowTrace = Trace(LightDirection, newWorldPos, NewMaxTraversal); 
+		vec2 NormalXZ = RawTraceData.xy; 
 
-	OutAlbedo.xyz = pow(clamp(MaxTraversal-abs(Incident.y) * Data.z,0.0,MaxTraversal)/MaxTraversal,2.0) * vec3(0.1,1.0,0.0); 
+		OutNormal.xyz = vec3(NormalXZ.y, sqrt(1.0 - NormalXZ.x * NormalXZ.x - NormalXZ.y * NormalXZ.y), NormalXZ.x); 
+
+		NormalXZ = normalize(NormalXZ); 
+
+		float CoordinateAngle = atan(NormalXZ.x, NormalXZ.y) / 6.283;
+		
+		vec3 GrassAlbedo = pow(texture(GrassTexture, vec2(CoordinateAngle, CoordinateHeight)).xyz,vec3(2.2)) * 2.0 * pow(texture(GrassSurfaceTexture, vec2(newWorldPos.x*.5, newWorldPos.z*.5)).xyz,vec3(2.2)); 
+		GrassAlbedo = min(GrassAlbedo, vec3(1.0)); 
+		OutAlbedo.xyz = mix(GrassAlbedo,OutAlbedo.xyz, pow(1.0-CoordinateHeight,3.0)); 
+		
+
+	}
 	OutWorldPosition.xyz = newWorldPos; 
 
 	vec4 NewClipSpace = IdentityMatrix * vec4(OutWorldPosition.xyz, 1.0); 
@@ -217,6 +308,20 @@ void main() {
 		OutLighting = texture(EntityLighting, TexCoord).xyz; 
 		//early exit! 
 		return; 
+	}
+
+	//shadow trace!!! OOOO
+
+	//project ourselves back to our terrain top via RT (would want to use a a shadowmap lookup for this in the future though...) 
+	
+
+	float TraversalY = (Incident.y) * Data.z; 
+
+
+	vec4 ShadowTrace = DoShadowTrace(TraversalY, LightDirection, newWorldPos); 
+
+	if(ShadowTrace.w >= 0.0) {
+		GrassDirectData.w = 0.0; 
 	}
 
 

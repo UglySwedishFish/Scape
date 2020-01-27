@@ -9,9 +9,14 @@ namespace Scape {
 
 		void FoliageRenderer::PrepareFoligeRenderer(Window& Window)
 		{
+
+			FoliageShadowProject = Core::ShadowOrthoMatrix(7.5, 10.0f, 50.0f); 
+			
+
 			FoliageRenderer = Shader("Shaders/FoliageRenderer"); 
 
-			CombinedDeferred = MultiPassFrameBufferObject(Window.GetResolution(), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F });
+			CombinedDeferred = MultiPassFrameBufferObjectPreviousData(Window.GetResolution(), 5, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F,GL_RGBA16F });
+			FoliageShadowMap = FrameBufferObject(Vector2i(4096), GL_R8);
 
 			for (int i = 0; i < 256; i++) {
 				std::string Title = "Foliage/FoliageData" + std::to_string(i) + ".png"; 
@@ -20,6 +25,8 @@ namespace Scape {
 			}
 
 			WindTexture = LoadTextureGL("Foliage/Wind.jpg"); 
+			GrassTexture = LoadTextureGL("Textures/Grass Blade.png"); 
+			GrassSurfaceTexture = LoadTextureGL("Textures/Grass Surface.jpg"); 
 
 			FoliageRenderer.Bind(); 
 			FoliageRenderer.SetUniform("MaxLength", MaxLenght); 
@@ -28,8 +35,10 @@ namespace Scape {
 				FoliageRenderer.SetUniform(Title.c_str(), i);
 			}
 
+			FoliageRenderer.SetUniform("GrassTexture", 21);
+			FoliageRenderer.SetUniform("GrassSurfaceTexture", 22);
 			FoliageRenderer.SetUniform("CurrentRayData", 20); 
-
+			
 			FoliageRenderer.SetUniform("EntityDepth", 0); 
 			FoliageRenderer.SetUniform("TerrainDepth", 1);
 
@@ -48,8 +57,10 @@ namespace Scape {
 
 		}
 
-		void FoliageRenderer::RenderFoliage(Camera& Camera, Window& Window, WorldManager& World, Vector3f SunDirection)
+		void FoliageRenderer::RenderFoliage(Camera& Camera, Window& Window, WorldManager& World, SkyRendering& Sky)
 		{
+
+			RenderFoliageShadowMap(Camera, Window, World, Sky); 
 
 			CombinedDeferred.Bind(); 
 
@@ -59,7 +70,7 @@ namespace Scape {
 			FoliageRenderer.SetUniform("IdentityMatrix", Camera.Project * Camera.View);
 			FoliageRenderer.SetUniform("Time", Window.GetTimeOpened());
 			FoliageRenderer.SetUniform("RandTexCoord", !sf::Keyboard::isKeyPressed(sf::Keyboard::R));
-			FoliageRenderer.SetUniform("LightDirection", SunDirection);
+			FoliageRenderer.SetUniform("LightDirection", Sky.Orientation);
 			FoliageRenderer.SetUniform("IdentityMatrix", Camera.Project * Camera.View);
 
 			World.DeferredFBO.BindDepthImage(0); 
@@ -76,11 +87,39 @@ namespace Scape {
 
 			RayData[int(Window.GetTimeOpened() * 30) & 255].Bind(20); 
 
+			GrassTexture.Bind(21); 
+
+			GrassSurfaceTexture.Bind(22); 
+
 			DrawPostProcessQuad(); 
 
 			FoliageRenderer.UnBind(); 
 
 			CombinedDeferred.UnBind(); 
+
+		}
+
+		void FoliageRenderer::RenderFoliageShadowMap(Camera& Camera, Window& Window, WorldManager& World, SkyRendering& Sky)
+		{
+
+			FoliageShadowView = Core::ViewMatrix(Camera.Position + Sky.Orientation * 25.f, Vector3f(Sky.Direction.x, Sky.Direction.y, 0.f)); 
+
+			Scape::Camera ShadowCamera; 
+			ShadowCamera.Project = FoliageShadowProject; 
+			ShadowCamera.View = FoliageShadowView; 
+
+
+			Sky.ShadowDeferred.Bind();
+
+			FoliageShadowMap.Bind();
+
+			World.RenderWorld(ShadowCamera, Sky.SkyCube, &Sky.ShadowDeferred);
+
+			FoliageShadowMap.UnBind(Window);
+
+			Sky.ShadowDeferred.UnBind();
+
+
 
 		}
 
