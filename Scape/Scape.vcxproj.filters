@@ -61,6 +61,9 @@
     <Filter Include="Shaders\Indirect">
       <UniqueIdentifier>{9e469c9e-dc5d-4bb1-b077-0009192bccd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\IndirectPrep">
+      <UniqueIdentifier>{cc095f07-196f-4e78-97ca-c9997421610a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -136,6 +139,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CubeMapHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IndirectLighting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -312,6 +318,12 @@
     </None>
     <None Include="Shaders\Indirect\shader.vert">
       <Filter>Shaders\Indirect</Filter>
+    </None>
+    <None Include="Shaders\IndirectPrep\shader.frag">
+      <Filter>Shaders\IndirectPrep</Filter>
+    </None>
+    <None Include="Shaders\IndirectPrep\shader.vert">
+      <Filter>Shaders\IndirectPrep</Filter>
     </None>
   </ItemGroup>
 </Project>

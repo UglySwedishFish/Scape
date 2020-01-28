@@ -18,6 +18,7 @@ namespace Scape {
 		Sky.PrepareSkyRenderer(Window); 
 		Direct.PrepareDirectLighting(Window); 
 		TAA.PrepareTemporalAntiAliasing(Window); 
+		IndirectLighting.PrepareIndirect(Window); 
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
@@ -130,7 +131,8 @@ namespace Scape {
 			World.DeferredFBOTerrain.UnBind(); 
 			FoliageRenderer.RenderFoliage(Camera, Window, World, Sky);
 			Direct.RenderDirectLighting(Window, Camera, FoliageRenderer, Sky); 
-			TAA.DoTemporalAntiAliasing(Window, Camera, Direct, FoliageRenderer); 
+			IndirectLighting.RenderIndirectLighting(Window, Camera, FoliageRenderer, Direct, World.LightBaker); 
+			TAA.DoTemporalAntiAliasing(Window, Camera, Direct, IndirectLighting, FoliageRenderer); 
 			
 			glFinish();
 

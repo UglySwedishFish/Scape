@@ -13,6 +13,7 @@ namespace Scape {
 		DirectRenderer Direct; 
 		FoliageRenderer FoliageRenderer; 
 		TemporalAntiAliasing TAA; 
+		Indirect IndirectLighting; 
 
 
 		void PreparePipeline(Camera& Camera, Window& Window);

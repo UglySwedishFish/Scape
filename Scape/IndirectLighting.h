@@ -8,8 +8,16 @@ namespace Scape {
 
 
 
+
 		struct Indirect {
 
+
+			FrameBufferObject IndirectPrep; 
+			MultiPassFrameBufferObject IndirectOutPut; 
+			Shader IndirectShader, IndirectPrepShader; 
+			
+			void PrepareIndirect(Window& Window); 
+			void RenderIndirectLighting(Window& Window, Camera& Camera, FoliageRenderer& FoliageDeferred, DirectRenderer& Direct, LightBaker & LightBaker); 
 
 
 		};

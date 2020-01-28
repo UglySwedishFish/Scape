@@ -158,7 +158,7 @@ void main() {
 	vec3 Alb = UseAlbedo ? (texture(Albedo, TexCoord).xyz) : vec3(1.0); 
 	float ShadowIntensity = UseAlbedo ? 1.0 : 0.0; 
 
-	Lighting = Alb * (ShadowIntensity * ShadowSample * texture(GrassDirect, TexCoord).w * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor + texture(LightMap, TexCoord).xyz);
+	Lighting = (ShadowIntensity * ShadowSample * texture(GrassDirect, TexCoord).w * max(dot(NormalSample.xyz, LightDirection), 0.0) * SunColor);
 	//Lighting = texture(LightMap, TexCoord).xyz; 
 
 	float L = length(NormalSample.xyz); 

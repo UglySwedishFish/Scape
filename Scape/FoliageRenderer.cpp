@@ -60,6 +60,8 @@ namespace Scape {
 		void FoliageRenderer::RenderFoliage(Camera& Camera, Window& Window, WorldManager& World, SkyRendering& Sky)
 		{
 
+			glEnable(GL_DEPTH_TEST); 
+
 			RenderFoliageShadowMap(Camera, Window, World, Sky); 
 
 			CombinedDeferred.Bind(); 
@@ -96,6 +98,8 @@ namespace Scape {
 			FoliageRenderer.UnBind(); 
 
 			CombinedDeferred.UnBind(); 
+
+			glDisable(GL_DEPTH_TEST);
 
 		}
 

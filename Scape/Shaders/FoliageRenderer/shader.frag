@@ -215,6 +215,8 @@ void main() {
 	OutNormal = texture(TerrainNormal, TexCoord); 
 	float L = length(OutNormal); 
 
+	gl_FragDepth = TerrainRawDepthSample; 
+
 	if(EntityDepthSample < TerrainRawDepthSample || L < 0.5 || L > 1.5) {
 		
 		OutAlbedo = texture(EntityAlbedo, TexCoord); 
@@ -222,6 +224,15 @@ void main() {
 		OutWorldPosition = texture(EntityWorldPosition, TexCoord); 
 		OutLighting = texture(EntityLighting, TexCoord).xyz; 
 		//early exit! 
+
+		float L2 = length(OutNormal); 
+
+		gl_FragDepth = EntityDepthSample; 
+		
+		if(L2 < 0.5 || L2 > 1.5) {
+			gl_FragDepth = 1.0; 
+		}
+
 		return; 
 	}
 
@@ -309,6 +320,8 @@ void main() {
 		//early exit! 
 		return; 
 	}
+
+	gl_FragDepth = NewClipSpace.z; 
 
 	//shadow trace!!! OOOO
 

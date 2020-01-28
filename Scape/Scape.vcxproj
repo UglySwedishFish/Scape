@@ -145,6 +145,7 @@
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Generator.cpp" />
     <ClCompile Include="include\GL\glad.c" />
+    <ClCompile Include="IndirectLighting.cpp" />
     <ClCompile Include="Intersecter.cpp" />
     <ClCompile Include="Kernel.cpp" />
     <ClCompile Include="LightBakerManager.cpp" />
@@ -206,6 +207,8 @@
     <None Include="Shaders\Generator\shader.vert" />
     <None Include="Shaders\HitHandler\shader.frag" />
     <None Include="Shaders\HitHandler\shader.vert" />
+    <None Include="Shaders\IndirectPrep\shader.frag" />
+    <None Include="Shaders\IndirectPrep\shader.vert" />
     <None Include="Shaders\Indirect\shader.frag" />
     <None Include="Shaders\Indirect\shader.vert" />
     <None Include="Shaders\RayGenerator\shader.frag" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Direct.h"
+#include "IndirectLighting.h"
 
 namespace Scape {
 
@@ -13,7 +13,7 @@ namespace Scape {
 			Shader TAAShader, BlitToScreenShader; 
 
 			void PrepareTemporalAntiAliasing(Window& Window);
-			void DoTemporalAntiAliasing(Window& Window, Camera& Camera, DirectRenderer& Direct, FoliageRenderer & Foliage); 
+			void DoTemporalAntiAliasing(Window& Window, Camera& Camera, DirectRenderer& Direct, Indirect& Indirect, FoliageRenderer & Foliage); 
 
 			 
 

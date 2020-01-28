@@ -21,14 +21,14 @@ namespace Scape {
 
 
 		}
-		void TemporalAntiAliasing::DoTemporalAntiAliasing(Window& Window, Camera& Camera, DirectRenderer& Direct, FoliageRenderer& Foliage)
+		void TemporalAntiAliasing::DoTemporalAntiAliasing(Window& Window, Camera& Camera, DirectRenderer& Direct, Indirect& Indirect, FoliageRenderer& Foliage)
 		{
 			
 			TemporalAntiAliasing.Bind(); 
 
 			TAAShader.Bind(); 
 
-			Direct.DirectLighting.BindImage(0, 0); 
+			Indirect.IndirectOutPut.BindImage(0, 0);
 			TemporalAntiAliasing.BindImagePrevious(1); 
 			Foliage.CombinedDeferred.BindImage(2, 2);
 			Foliage.CombinedDeferred.BindImagePrevious(2,3); 

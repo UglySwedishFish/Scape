@@ -53,6 +53,8 @@ vec2 FindBestPixel(vec2 Coord, vec3 BaseWorldPosition, float Distance) {
 
 vec4 GetClamped(sampler2D Current, sampler2D Previous, vec2 PreviousTexCoord) {
 	
+	return texture(Previous, PreviousTexCoord); 
+
 	ivec2 Coord = ivec2(gl_FragCoord.xy); 
 
 	vec4 Min = vec4(10000.0); 
@@ -104,7 +106,6 @@ void main() {
 
 	Lighting.xyz = mix(texture(CombinedLighting, TexCoord).xyz, GetClamped(CombinedLighting, PreviousLighting, LookUpCoordinate).xyz,min(PreviousFrame / (PreviousFrame+1.0), ClampFactor)); 
 	Lighting.w = PreviousFrame; 
-
 
 	
 }

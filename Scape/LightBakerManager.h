@@ -50,6 +50,9 @@ namespace Scape {
 			std::vector<Vector3f> ShadowMapOrientations;
 			std::vector<Vector2f> ShadowMapRotations;
 			std::vector<Matrix4f> ShadowViewMatrices;
+
+			unsigned int SobolTexture, RankingTexture, ScramblingTexture;
+
 		private: 
 
 			void ConstructLightBakingDataImage(Chunk& Chunk); 
@@ -78,7 +81,7 @@ namespace Scape {
 			
 			
 
-			unsigned int SobolTexture, RankingTexture, ScramblingTexture; 
+			
 			unsigned int ShadowSample = 0; 
 
 
