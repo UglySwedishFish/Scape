@@ -14,16 +14,14 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Basic direct lighting + global illumination for direct lighting (1 bounce)**
 * **Constant time grass rendering using 2d lightfields**
 * **TAA (basic right now)**
+* **Support for screen-space GI + AO for more dynamic objects as well as camera-centric cubemap solution for indirect specular lighting**
 
 # What are the future plans? (in no real particular order)
 
 * **Implemented support for physically-correct directional lighting (with contact hardening)** 
-* **Implement meshing for terrain, as well as approximation for terrain tracing for the path-tracer** 
-* **Implement support for 1 bounce GI from directional light source** 
 * **Shift lightmapping to O(log N) solution for lightbaking as well as implement 5+ bounce GI for both hemispherical and directional light source**
 * **Support for multiple chunks** 
 * **Volumetric height fog** 
-* **Support for screen-space GI + AO for more dynamic objects as well as camera-centric cubemap solution for indirect specular lighting**
 * **Support for baked radiance probes for chunks for indirect specular lighting fallback as well as indirect diffuse fallback for more dynamic objects**
 * **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)**
 * **Basic skeletal animation support** 
