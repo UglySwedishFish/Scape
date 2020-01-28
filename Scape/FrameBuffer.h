@@ -105,6 +105,7 @@ namespace Scape {
 
 			void Bind();
 			void UnBind(Window Window);
+			void UnBind(); 
 			CubeMultiPassFrameBufferObject(Vector2i Resolution, int Targets, std::vector<int> Formats, bool HasDepth, std::vector<bool> CalculateMips);
 		};
 		struct CubeFrameBufferObject {

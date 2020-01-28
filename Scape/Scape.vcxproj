@@ -195,6 +195,8 @@
     <None Include="..\..\UglySwedishFish\SCP-354\SCP-354\Shaders\EntityDeferred\shaderSimple.frag" />
     <None Include="Shaders\Copy\shader.frag" />
     <None Include="Shaders\Copy\shader.vert" />
+    <None Include="Shaders\CubeMapCombiner\shader.frag" />
+    <None Include="Shaders\CubeMapCombiner\shader.vert" />
     <None Include="Shaders\Direct\shader.frag" />
     <None Include="Shaders\Direct\shader.vert" />
     <None Include="Shaders\EntityDeferred\shader.frag" />

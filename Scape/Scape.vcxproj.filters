@@ -64,6 +64,9 @@
     <Filter Include="Shaders\IndirectPrep">
       <UniqueIdentifier>{cc095f07-196f-4e78-97ca-c9997421610a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\CubeMapCombiner">
+      <UniqueIdentifier>{c2ef87c1-4f24-4a42-a639-d1cc7daf1379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -324,6 +327,12 @@
     </None>
     <None Include="Shaders\IndirectPrep\shader.vert">
       <Filter>Shaders\IndirectPrep</Filter>
+    </None>
+    <None Include="Shaders\CubeMapCombiner\shader.vert">
+      <Filter>Shaders\CubeMapCombiner</Filter>
+    </None>
+    <None Include="Shaders\CubeMapCombiner\shader.frag">
+      <Filter>Shaders\CubeMapCombiner</Filter>
     </None>
   </ItemGroup>
 </Project>

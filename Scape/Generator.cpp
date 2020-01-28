@@ -31,12 +31,12 @@ namespace Scape {
 
 			FinalEntities.push_back(ThisEntity); 
 
-			/*if (ThisEntity.ModelIndex == 0) {
+			if (ThisEntity.ModelIndex == 0) {
 
 				ThisEntity.ModelIndex = 1; 
 				FinalEntities.push_back(ThisEntity);
 
-			}*/
+			}
 
 		}
 

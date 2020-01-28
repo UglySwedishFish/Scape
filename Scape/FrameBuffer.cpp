@@ -399,6 +399,24 @@ void Scape::Rendering::CubeMultiPassFrameBufferObject::UnBind(Window Window) {
 
 }
 
+void Scape::Rendering::CubeMultiPassFrameBufferObject::UnBind()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	for (int CalcMipIdx = 0; CalcMipIdx < CalculateMips.size(); CalcMipIdx++) {
+
+		if (CalculateMips[CalcMipIdx]) {
+
+			glBindTexture(GL_TEXTURE_CUBE_MAP, Texture[CalcMipIdx]);
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+		}
+
+
+	}
+}
+
 
 Scape::Rendering::CubeMultiPassFrameBufferObject::CubeMultiPassFrameBufferObject(Vector2i Resolution, int Targets, std::vector<int> Formats, bool HasDepth, std::vector<bool> CalculateMips)
 {

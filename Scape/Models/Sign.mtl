@@ -1,0 +1,16 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl Plane
+Ns 319.607843
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+disp C:\\Users\\truea\\source\\repos\\Scape\\Scape\\Textures\\Sign\\1001_roughness.jpg
+map_Ka C:\\Users\\truea\\source\\repos\\Scape\\Scape\\Textures\\Sign\\1001_normal.png
+map_Kd -o 0.000000 -1.000000 0.000000 C:\\Users\\truea\\source\\repos\\Scape\\Scape\\Textures\\Sign\\1001_albedo.jpg
+map_Ks C:\\Users\\truea\\source\\repos\\Scape\\Scape\\Textures\\Sign\\1001_metallic.jpg

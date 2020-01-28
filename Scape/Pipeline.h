@@ -14,6 +14,7 @@ namespace Scape {
 		FoliageRenderer FoliageRenderer; 
 		TemporalAntiAliasing TAA; 
 		Indirect IndirectLighting; 
+		CubeMapHandler CubeMap; 
 
 
 		void PreparePipeline(Camera& Camera, Window& Window);

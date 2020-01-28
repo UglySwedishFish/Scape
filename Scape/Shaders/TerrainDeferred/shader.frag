@@ -39,7 +39,7 @@ void main() {
 	OutAlbedo.xyz = pow(texture(DirtTexture, TexCoord * 2.0).xyz,vec3(2.2)); 
 	OutNormal.xyz = Normal; 
 	WorldPosition.xyz = Position; 
-
+	WorldPosition.w = 0.0; 
 
 	vec3 LightMap = texture(LightMap, LightMapTC).xyz; 
 

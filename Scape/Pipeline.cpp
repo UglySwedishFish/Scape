@@ -19,6 +19,7 @@ namespace Scape {
 		Direct.PrepareDirectLighting(Window); 
 		TAA.PrepareTemporalAntiAliasing(Window); 
 		IndirectLighting.PrepareIndirect(Window); 
+		CubeMap.PrepareCubeMapHandler(); 
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
@@ -120,6 +121,7 @@ namespace Scape {
 			Camera.Project = Core::TAAJitterMatrix(Window.GetFrameCount(), Window.GetResolution()) * Camera.RawProject;
 
 			Sky.RenderSky(Window, Camera, World); 
+			CubeMap.RenderToCubeMap(Camera, World, Sky); 
 
 			glEnable(GL_DEPTH_TEST); 
 			
@@ -131,7 +133,7 @@ namespace Scape {
 			World.DeferredFBOTerrain.UnBind(); 
 			FoliageRenderer.RenderFoliage(Camera, Window, World, Sky);
 			Direct.RenderDirectLighting(Window, Camera, FoliageRenderer, Sky); 
-			IndirectLighting.RenderIndirectLighting(Window, Camera, FoliageRenderer, Direct, World.LightBaker); 
+			IndirectLighting.RenderIndirectLighting(Window, Camera, FoliageRenderer, Direct, World.LightBaker, CubeMap, Sky); 
 			TAA.DoTemporalAntiAliasing(Window, Camera, Direct, IndirectLighting, FoliageRenderer); 
 			
 			glFinish();

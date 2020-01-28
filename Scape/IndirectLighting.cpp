@@ -39,14 +39,23 @@ namespace Scape {
 			IndirectShader.SetUniform("Scrambling", 10);
 
 			IndirectShader.SetUniform("Depth", 11);
+			IndirectShader.SetUniform("Sky", 12);
 
 			IndirectShader.UnBind(); 
 
 
 		}
 
-		void Indirect::RenderIndirectLighting(Window& Window, Camera& Camera, FoliageRenderer& FoliageDeferred, DirectRenderer& Direct, LightBaker& LightBaker)
+		float Rough = 0.0f; 
+
+		void Indirect::RenderIndirectLighting(Window& Window, Camera& Camera, FoliageRenderer& FoliageDeferred, DirectRenderer& Direct, LightBaker& LightBaker, CubeMapHandler& CubeMap, SkyRendering& Sky)
 		{
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+				Rough += 1.0 * Window.GetFrameTime(); 
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+				Rough -= 1.0 * Window.GetFrameTime();
+			Rough = glm::clamp(Rough, 0.f, 1.f); 
 
 			IndirectPrep.Bind(); 
 
@@ -76,14 +85,23 @@ namespace Scape {
 			IndirectShader.SetUniform("zNear", Camera.znear);
 			IndirectShader.SetUniform("zFar", Camera.zfar);
 			IndirectShader.SetUniform("UseNewMethod", sf::Keyboard::isKeyPressed(sf::Keyboard::N));
+			IndirectShader.SetUniform("Roughness", Rough);
 
 			IndirectPrep.BindImage(0); 
 			Direct.DirectLighting.BindImage(0, 1); 
+
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMap.CubeBuffer.Texture[0]);
+
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMap.CubeBuffer.Texture[1]);
+			
 
 			FoliageDeferred.CombinedDeferred.BindImage(0, 4);
 			FoliageDeferred.CombinedDeferred.BindImage(1, 5); 
 			FoliageDeferred.CombinedDeferred.BindImage(2, 6);
 			FoliageDeferred.CombinedDeferred.BindImage(3, 7);
+
 
 			glActiveTexture(GL_TEXTURE8); 
 			glBindTexture(GL_TEXTURE_2D, LightBaker.SobolTexture); 
@@ -95,6 +113,9 @@ namespace Scape {
 			glBindTexture(GL_TEXTURE_2D, LightBaker.ScramblingTexture);
 
 			FoliageDeferred.CombinedDeferred.BindDepthImage(11); 
+
+			glActiveTexture(GL_TEXTURE12);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, Sky.SkyCube.Texture[0]);
 
 			DrawPostProcessQuad(); 
 
