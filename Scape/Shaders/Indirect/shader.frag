@@ -58,7 +58,7 @@ int FetchFromTexture(sampler2D Texture, int Index) {
 }
 
 float LinearlizeDepth(float z) {
-	return 2.0 * zNear * zFar / (zFar + zNear - (z * 2. - 1.) * (zFar - zNear)); 
+	return 2.0 * zNear * zFar / (zFar + zNear - (z * 2.0 - 1.0) * (zFar - zNear)); 
 }
 
 
@@ -198,7 +198,7 @@ vec3 TraceCubeMap(vec3 Direction, vec3 Origin, int Steps) {
 	//figure out the max traversal distance 
 
 
-
+	
 	/*float TraversalDistance = rsi(Origin, Direction, CameraPosition, 100.f); //gives us max traversal distance :)
 
 	if(TraversalDistance < 0.0) 
@@ -458,6 +458,6 @@ void main() {
 
 
 
-	Diffuse = texture(Albedo, TexCoord).xyz * ((Metal ? vec3(0.0) : texture(DirectInput, TexCoord).xyz) + Indirect); 
+	Diffuse = (Indirect); 
 
 }

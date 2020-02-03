@@ -12,7 +12,7 @@ namespace Scape {
 
 		const float Ranges[5] = { 15.0, 45.0, 135., 405., 1215. };
 		const unsigned char UpdateQueue[] = { 0,1,0,2,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,2,0,1,0,3,0,4 };
-		const int SHADOWMAP_RES = 2048; 
+		const int SHADOWMAP_RES = 1024; 
 
 
 		struct SkyRendering {

@@ -9,6 +9,9 @@ uniform sampler2D WorldPosPrevious;
 uniform sampler2D PreviousWorldPos; 
 uniform sampler2D CurrentNormal; 
 uniform sampler2D PreviousNormal; 
+
+uniform sampler2D Albedo; 
+
 uniform vec3 CameraPosition; 
 
 uniform mat4 MotionMatrix; 
@@ -138,7 +141,9 @@ void main() {
 
 	float PreviousFrame = texture(PreviousLighting, TexCoord).w + 1.0; 
 
-	vec3 CurrentLighting = ACESFitted(texture(CombinedLighting, TexCoord).xyz,1.0); 
+	vec3 CurrentLighting = ACESFitted(texture(Albedo, TexCoord).xyz * texture(CombinedLighting, TexCoord).xyz,1.0); 
+
+
 
 	Lighting.xyz = mix(CurrentLighting, GetClamped(CombinedLighting, PreviousLighting, LookUpCoordinate).xyz,min(PreviousFrame / (PreviousFrame+1.0), ClampFactor)); 
 	Lighting.w = PreviousFrame; 

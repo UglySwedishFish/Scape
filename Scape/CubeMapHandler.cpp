@@ -36,13 +36,13 @@ namespace Scape {
 		{
 
 			Frame++; 
-			for (int Side = 0; Side < 6; Side++) {
+			for (int Side = (Frame%3)*2; Side < (Frame%3)*2+2; Side++) {
 
 				Matrix4f ViewMatrix = glm::translate(CubeViews[Side], Vector3f(-Camera.Position.x, -Camera.Position.y, -Camera.Position.z));
 
 				Scape::Camera TemporaryCamera; 
 				TemporaryCamera.View = ViewMatrix; 
-				TemporaryCamera.Project = Core::TAAJitterMatrix(Frame, Vector2i(CubeMapRes))* CubeProjection; 
+				TemporaryCamera.Project = CubeProjection; 
 
 				glEnable(GL_DEPTH_TEST); 
 

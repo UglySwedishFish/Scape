@@ -8,8 +8,8 @@ namespace Scape {
 
 		void Indirect::PrepareIndirect(Window& Window)
 		{
-			IndirectPrep = FrameBufferObject(Window.GetResolution(), GL_R32F, false); 
-			IndirectOutPut = MultiPassFrameBufferObject(Window.GetResolution(), 2, { GL_RGBA16F, GL_RGB16F }, false); 
+			IndirectPrep = MultiPassFrameBufferObject(Window.GetResolution() / 2, 2, { GL_R32F,GL_RGB16F }, false);
+			IndirectOutPut = MultiPassFrameBufferObject(Window.GetResolution() / 2, 2, { GL_RGBA16F, GL_RGB16F }, false);
 
 			IndirectShader = Shader("Shaders/Indirect");
 			IndirectPrepShader = Shader("Shaders/IndirectPrep"); 
@@ -64,7 +64,8 @@ namespace Scape {
 			FoliageDeferred.CombinedDeferred.BindImage(2, 0); 
 			FoliageDeferred.CombinedDeferred.BindImage(1, 1);
 
-			IndirectPrepShader.SetUniform("ViewMatrix", Camera.View); 
+			IndirectPrepShader.SetUniform("zNear", Camera.znear);
+			IndirectPrepShader.SetUniform("zFar", Camera.zfar);
 
 			DrawPostProcessQuad(); 
 
@@ -87,7 +88,7 @@ namespace Scape {
 			IndirectShader.SetUniform("UseNewMethod", sf::Keyboard::isKeyPressed(sf::Keyboard::N));
 			IndirectShader.SetUniform("Roughness", Rough);
 
-			IndirectPrep.BindImage(0); 
+			IndirectPrep.BindImage(0, 0); 
 			Direct.DirectLighting.BindImage(0, 1); 
 
 			glActiveTexture(GL_TEXTURE2);

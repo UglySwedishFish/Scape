@@ -13,7 +13,7 @@ namespace Scape {
 		struct Indirect {
 
 
-			FrameBufferObject IndirectPrep; 
+			MultiPassFrameBufferObject IndirectPrep;
 			MultiPassFrameBufferObject IndirectOutPut; 
 			Shader IndirectShader, IndirectPrepShader; 
 			

@@ -1,18 +1,28 @@
 #version 330
 in vec2 TexCoord; 
 
-layout(location = 0) out float ViewSpaceZ; 
+layout(location = 0) out float OutDepth; 
+layout(location = 1) out vec3 OutNormal; 
 
-uniform sampler2D WorldPosition; 
-uniform sampler2D Normal; 
-uniform mat4 ViewMatrix; 
+
+
+
+
+uniform sampler2D Depth; 
+uniform sampler2D Normal;
+
+uniform float zNear; 
+uniform float zFar; 
+
+
+float LinearlizeDepth(float z) {
+	return 2.0 * zNear * zFar / (zFar + zNear - (z * 2.0 - 1.0) * (zFar - zNear)); 
+}
+
 
 void main() {
-	ViewSpaceZ = (ViewMatrix * vec4(texture(WorldPosition, TexCoord).xyz,1.0)).z; 
-
-	float L = length(texture(Normal, TexCoord).xyz); 
-
-	if(L < 0.5 || L > 1.5) 
-		ViewSpaceZ = 0.0; 
+	
+	OutDepth = LinearlizeDepth(texture(Depth, TexCoord).x); 
+	OutNormal = texture(Normal, TexCoord).xyz; 
 
 }

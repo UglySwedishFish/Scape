@@ -23,6 +23,10 @@ namespace Scape {
 
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS); 
 
+		
+
+
+
 		FoliageBaker FoliageBaker; 
 
 		for (int i = 0; i < 8; i++) {

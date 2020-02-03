@@ -16,6 +16,7 @@ namespace Scape {
 			TAAShader.SetUniform("PreviousWorldPos", 3);
 			TAAShader.SetUniform("CurrentNormal", 4);
 			TAAShader.SetUniform("PreviousNormal", 5);
+			TAAShader.SetUniform("Albedo", 6);
 
 			TAAShader.UnBind(); 
 
@@ -34,6 +35,7 @@ namespace Scape {
 			Foliage.CombinedDeferred.BindImagePrevious(2,3); 
 			Foliage.CombinedDeferred.BindImage(1, 4);
 			Foliage.CombinedDeferred.BindImagePrevious(1, 5);
+			Foliage.CombinedDeferred.BindImage(0, 6); 
 
 			TAAShader.SetUniform("CameraPosition", Camera.Position); 
 			TAAShader.SetUniform("MotionMatrix", Camera.Project * Camera.PrevView); 
