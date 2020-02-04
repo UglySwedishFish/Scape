@@ -75,8 +75,9 @@ void main() {
 
 	}
 	
+	vec2 WorldPosFloor = floor(WorldPosition.xz * 4.0); 
 
-
+	//OutNormal.w = mod(WorldPosFloor.x + WorldPosFloor.y, 2.); 
 
 	Lighting = LightMap.x * textureLod(Sky, OutNormal.xyz,4.0).xyz; 
 	Lighting += LightGIFinal * SunColor; 

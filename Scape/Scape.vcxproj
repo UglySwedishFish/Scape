@@ -209,8 +209,12 @@
     <None Include="Shaders\Generator\shader.vert" />
     <None Include="Shaders\HitHandler\shader.frag" />
     <None Include="Shaders\HitHandler\shader.vert" />
+    <None Include="Shaders\IndirectDirections\shader.frag" />
+    <None Include="Shaders\IndirectDirections\shader.vert" />
     <None Include="Shaders\IndirectPrep\shader.frag" />
     <None Include="Shaders\IndirectPrep\shader.vert" />
+    <None Include="Shaders\IndirectUpscaling\shader.frag" />
+    <None Include="Shaders\IndirectUpscaling\shader.vert" />
     <None Include="Shaders\Indirect\shader.frag" />
     <None Include="Shaders\Indirect\shader.vert" />
     <None Include="Shaders\RayGenerator\shader.frag" />

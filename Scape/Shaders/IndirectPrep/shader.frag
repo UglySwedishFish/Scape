@@ -2,7 +2,7 @@
 in vec2 TexCoord; 
 
 layout(location = 0) out float OutDepth; 
-layout(location = 1) out vec3 OutNormal; 
+layout(location = 1) out vec4 OutNormal; 
 
 
 
@@ -23,6 +23,6 @@ float LinearlizeDepth(float z) {
 void main() {
 	
 	OutDepth = LinearlizeDepth(texture(Depth, TexCoord).x); 
-	OutNormal = texture(Normal, TexCoord).xyz; 
+	OutNormal = texture(Normal, TexCoord); 
 
 }

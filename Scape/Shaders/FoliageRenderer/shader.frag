@@ -244,7 +244,7 @@ void main() {
 	OutWorldPosition = texture(TerrainWorldPosition, TexCoord); 
 	OutLighting = texture(TerrainLighting, TexCoord).xyz; 
 
-	return; 
+	//return; 
 	vec3 Incident = normalize(RawTerrainWorldPosition.xyz - CameraPosition); 
 
 	//would require a TBN matrix actually 

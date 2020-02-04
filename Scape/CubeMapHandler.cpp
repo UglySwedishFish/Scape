@@ -7,7 +7,7 @@ namespace Scape {
 		void CubeMapHandler::PrepareCubeMapHandler()
 		{
 			
-			CubeBuffer = CubeMultiPassFrameBufferObject(Vector2i(CubeMapRes), 2, { GL_RGBA16F, GL_R32F }, false, { false,false });
+			CubeBuffer = CubeMultiPassFrameBufferObject(Vector2i(CubeMapRes), 2, { GL_RGBA16F, GL_R16F }, false, { false,false });
 			TemporaryCubeBuffer = MultiPassFrameBufferObject(Vector2i(CubeMapRes), 4, { GL_RGBA16F, GL_RGBA16F, GL_RGBA32F, GL_RGB16F });
 
 			CubeFinal = Shader("Shaders/CubeMapCombiner"); 

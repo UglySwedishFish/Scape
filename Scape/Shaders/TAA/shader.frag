@@ -137,10 +137,8 @@ void main() {
 	}
 
 
-	
-
 	float PreviousFrame = texture(PreviousLighting, TexCoord).w + 1.0; 
-
+	
 	vec3 CurrentLighting = ACESFitted(texture(Albedo, TexCoord).xyz * texture(CombinedLighting, TexCoord).xyz,1.0); 
 
 

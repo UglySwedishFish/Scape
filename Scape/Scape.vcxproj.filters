@@ -67,6 +67,12 @@
     <Filter Include="Shaders\CubeMapCombiner">
       <UniqueIdentifier>{c2ef87c1-4f24-4a42-a639-d1cc7daf1379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\IndirectUpscaling">
+      <UniqueIdentifier>{99ac7df3-3e00-4aed-9e69-5b0a2c2a1c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\IndirectDirections">
+      <UniqueIdentifier>{806a3cb7-72e3-4bc0-8fe6-5312c8464d2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\GL\glad.c">
@@ -333,6 +339,18 @@
     </None>
     <None Include="Shaders\CubeMapCombiner\shader.frag">
       <Filter>Shaders\CubeMapCombiner</Filter>
+    </None>
+    <None Include="Shaders\IndirectUpscaling\shader.vert">
+      <Filter>Shaders\IndirectUpscaling</Filter>
+    </None>
+    <None Include="Shaders\IndirectUpscaling\shader.frag">
+      <Filter>Shaders\IndirectUpscaling</Filter>
+    </None>
+    <None Include="Shaders\IndirectDirections\shader.frag">
+      <Filter>Shaders\IndirectDirections</Filter>
+    </None>
+    <None Include="Shaders\IndirectDirections\shader.vert">
+      <Filter>Shaders\IndirectDirections</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -87,7 +87,7 @@ namespace Scape {
 			
 			WindTexture.Bind(16); 
 
-			RayData[int(Window.GetTimeOpened() * 30) & 255].Bind(20); 
+			RayData[int(0) & 255].Bind(20); 
 
 			GrassTexture.Bind(21); 
 

@@ -29,7 +29,7 @@ namespace Scape {
 
 			TAAShader.Bind(); 
 
-			Indirect.IndirectOutPut.BindImage(0, 0);
+			Indirect.IndirectUpscaled.BindImage(0, 0);
 			TemporalAntiAliasing.BindImagePrevious(1); 
 			Foliage.CombinedDeferred.BindImage(2, 2);
 			Foliage.CombinedDeferred.BindImagePrevious(2,3); 
