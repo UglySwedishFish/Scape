@@ -15,12 +15,14 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Constant time grass rendering using 2d lightfields**
 * **TAA (basic right now)**
 * **Support for screen-space GI + AO for more dynamic objects as well as camera-centric cubemap solution for indirect specular lighting**
+* **Basic color dithering to help get richer colors on worse displays**
 
 # What are the future plans? (in no real particular order)
 
 * **Implemented support for physically-correct directional lighting (with contact hardening)** 
 * **Shift lightmapping to O(log N) solution for lightbaking as well as implement 5+ bounce GI for both hemispherical and directional light source**
 * **Support for multiple chunks** 
+* **Implement support for caching lightmaps, as well as having lower-res lightmaps for chunks that are further away (to help save on vram)**
 * **Volumetric height fog** 
 * **Support for baked radiance probes for chunks for indirect specular lighting fallback as well as indirect diffuse fallback for more dynamic objects**
 * **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)**
@@ -32,7 +34,6 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Entirely dynamic weather system with rain and snow (with procedural coverage for both of these)**
 * **Area, IES, Point and Spot light sources** 
 * **Very realistic ocean rendering with physically accurate water volume** 
-* **(Possibly) look into implementing dithering to get richer color depth**
 * **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat!**
 
 # More media:
