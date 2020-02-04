@@ -21,6 +21,7 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Implemented support for physically-correct directional lighting (with contact hardening)** 
 * **Shift lightmapping to O(log N) solution for lightbaking as well as implement 5+ bounce GI for both hemispherical and directional light source**
 * **Support for multiple chunks** 
+* **Implement support for caching lightmaps, as well as having lower-res lightmaps for chunks that are further away (to help save on vram)**
 * **Volumetric height fog** 
 * **Support for baked radiance probes for chunks for indirect specular lighting fallback as well as indirect diffuse fallback for more dynamic objects**
 * **Support for more complicated materials such as skin (with approximatory subsurface scattering), glass (with proper refraction) and leaves (with translucency)**
