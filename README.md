@@ -15,6 +15,7 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Constant time grass rendering using 2d lightfields**
 * **TAA (basic right now)**
 * **Support for screen-space GI + AO for more dynamic objects as well as camera-centric cubemap solution for indirect specular lighting**
+* **Basic color dithering to help get richer colors on worse displays**
 
 # What are the future plans? (in no real particular order)
 
@@ -33,7 +34,6 @@ Because of the incredibly early stage of the engine, there isn't that much that 
 * **Entirely dynamic weather system with rain and snow (with procedural coverage for both of these)**
 * **Area, IES, Point and Spot light sources** 
 * **Very realistic ocean rendering with physically accurate water volume** 
-* **(Possibly) look into implementing dithering to get richer color depth**
 * **Implement system to allow for more interesting ways of exploration! Skiing, biking, travelling by boat!**
 
 # More media:
